@@ -1,0 +1,2563 @@
+---
+title: "Boyé et al. 2019 Diversity and distributions"
+author: "A. Boyé"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::readthedown:
+    code_folding: "show"
+    highlight: "tango"
+    lightbox: TRUE
+    gallery: TRUE
+    thumbnails: FALSE
+    toc_depth: 6
+bibliography: Boye_etal_2019-DDI.bib # bibliographie
+link-citations: true # Lien html pour les citations
+csl: Boye_etal_2019-DDI.csl # Style de citation
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, error = FALSE, eval = TRUE, cache = TRUE)
+```
+
+This is the code used to make the analyses of our article entitled **Trait-based approach to monitoring marine benthic data along 500 km of coastline** published in *Diversity and distributions* in 2019. 
+
+The article is open-access and can be found on the webpage of the journal at [doi:10.1111/ddi.12987](https://onlinelibrary.wiley.com/doi/abs/10.1111/ddi.12987) 
+
+Note that all figures that do not appear in this document were made on Inkscape. This include :
+
+- Figure 1b, 1c
+- Figure 3b
+
+Some of the figures were also combined on Inkscape, including :
+
+- Figure 1
+- Figure 3
+- Figure 4
+
+> Please report any bug that you could find (better late than never!). 
+> Hopefully, there are none `r knitr::asis_output("\U0001f91e  \U1F64F  \U0001f91e")`
+ 
+
+# Packages
+
+```{r packages, echo = TRUE}
+
+# Manipulating data
+library(tidyverse)
+library(magrittr)
+library(naniar)
+library(VIM) 
+library(skimr)
+
+# Ecology
+library(vegan)
+library(FD)
+library(SYNCSA)
+library(adespatial)
+library(picante)
+
+# Visualisation
+library(ggrepel)
+library(ggpointdensity)
+library(ggjoy)
+library(ggalt)
+library(viridis)
+library(ggthemes)
+library(ggcorrplot)
+library(ggpubr)
+#library(ggtern) # Loaded at the end because of conflict with themes
+
+# Map
+library(PBSmapping) # clipPolys
+library(ggsn)
+
+# Markdown
+library(knitr)
+library(kableExtra)
+```
+
+# Load data
+
+```{r data_loading, echo = TRUE}
+
+# Set repertory
+setwd("01_Data")
+
+# Community data
+load("Community.Rdata")
+
+# Environmental data
+load("Environment.Rdata")
+
+# Sites coordinates
+coord <- read.csv("Coordinates.csv",header=T)
+
+# List of traits and modalities
+trait_list <- read.csv2("Trait_list.csv", header = T)
+
+# Trait matrix
+trait_mat <- read.csv("Trait_mat.csv", header = T)
+
+# On repart dans le répertoire de travail
+setwd("..")
+
+```
+
+# Load home-made functions
+
+```{r}
+source("02_Functions/pca_ggplot.R")
+```
+
+---
+
+# Format the data
+
+## Community data
+
+Data selected : 
+
+- Spring
+- 2007 / 2010 / 2013
+- Infauna
+  
+```{r data_sel, echo = TRUE}
+
+# Select data and format the df
+#------------------------------
+
+faune_sel <- faune %>% 
+  # Select Spring data, years 2007 / 2010 / 2013, and remove the epifauna ("Haveneau" = dip nets)
+  filter(saison=="Printemps" & annee %in% c(2007, 2010, 2013) & method_echant != "Haveneau") %>%
+  # Join species classification
+  left_join(.,sp_classif,by=c("species"="species_init")) %>%
+  # Modify the name of the habitats
+  mutate(mini_theme=recode(theme, "Subtidal Meuble"="SM","Intertidal Meuble"="IM","Herbiers Intertidaux"="HI","Bancs de Maërl"="MA")) %>%
+  # Change the name of the two maerl beds within the Bay of Brest: Rozegat & Keraliou
+  mutate(site = case_when(
+    str_detect(point_name,"Rozegat") ~ "Rade de Brest - Rozegat",
+    str_detect(point_name,"Keraliou") ~ "Rade de Brest - Keraliou",
+    TRUE ~ as.character(site)
+  ))
+
+# Aggregate data at the site level and format the site x species matrix
+#----------------------------------------------------------------------
+
+# Clean data
+faune_cl <- faune_sel %>%
+  # Aggregate the different entries that a single species may have in a sample
+  group_by(theme,mini_theme,site,method_echant,annee,Class,species) %>%
+  summarise(abondance=sum(abondance)) %>%
+  ungroup() %>%
+  # Remove the site of Keraliou with incomplete data
+  filter(site!="Rade de Brest - Keraliou") %>%
+  # Clean site names and order the sites and habitats
+  mutate(site=recode(site,"Saint-Brieuc"="Baie de Saint-Brieuc")) %>%
+  mutate(site=ifelse(site=="Baie de Saint-Brieuc" & theme=="Bancs de Maërl","Arcouest",site)) %>%
+  mutate(theme=recode(theme, "Bancs de Maërl" = "Subtidal maerl beds", "Subtidal Meuble" = "Subtidal bare sediments", "Herbiers Intertidaux" = "Intertidal seagrass beds", "Intertidal Meuble" = "Intertidal bare sediments")) %>%
+    mutate(theme = factor(theme,levels=c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), ordered=TRUE)) %>%
+  mutate(site=factor(site,levels=c("Baie du Mont Saint-Michel","Saint-Benoit","Saint-Malo","Saint-Briac","Saint-Cast","Baie de Saint-Brieuc","Arcouest","Sept-Iles","Lannion","Saint-Efflam","Pierre Noire","Morlaix","Callot","Sainte-Marguerite","Molene","Blancs Sablons","Iroise","Camaret","Roscanvel","Rade de Brest", "Rade de Brest - Rozegat","Rade de Brest - Larmor","Baie de Douarnenez Nord","Plage de l'Aber","Baie de Douarnenez Sud","Audierne","Glenan","Concarneau","Trevignon","Gavres","Erdeven","Lorient Etel","Plouharnel","Quiberon","Belle-ile","Meaban","Kerjouanno","Arradon","Vilaine Large Sud","Vilaine Large Nord","Vilaine Cote","Damgan"),ordered=T)) %>%
+  # Transform character variables to factor type
+  mutate_if(is.character, as.factor)
+
+# Create the community matrix for the whole community
+#----------------------------------------------------
+
+faune_tot <- faune_cl %>%
+  # Remove the Class variable
+  select(-Class) %>%
+  # Create site x species matrix by putting 0 for absent species
+  spread(species,abondance,fill=0) %>%
+  # Remove the precision for the azoique samples
+  select(-contains("azoïque")) %>%
+  as.data.frame()
+
+# Identifiers
+id_tot <- faune_tot %>%
+  select(theme,mini_theme,site,method_echant,annee) 
+
+# Community matrix
+com_tot <- faune_tot %>%
+  set_rownames(paste(.$mini_theme,.$site,.$annee,sep="_")) %>%
+  select(-theme,-mini_theme,-site,-method_echant,-annee)
+
+# Create the community matrix for the polychaete only
+#-----------------------------------------------------
+
+faune_pol <- faune_cl %>%
+  # Select polychaetes
+  filter(Class=="Polychaeta") %>%
+  # Remove the Class variable
+  select(-Class) %>%
+  # Create site x species matrix by putting 0 for absent species
+  spread(species,abondance,fill=0) %>%
+  # Remove the precision for the azoique samples
+  select(-contains("azoïque")) %>%
+  ungroup()
+
+# Identifiers
+id_pol <- faune_pol %>%
+  select(theme,mini_theme,site,method_echant,annee)
+
+# Community matrix
+com_pol <- faune_pol %>%
+  as.data.frame %>%
+  set_rownames(paste(.$mini_theme,.$site,.$annee,sep="_")) %>%
+  select(-theme,-mini_theme,-site,-method_echant,-annee)
+
+# Separate intertidal and subtidal data (different sampling tools)
+#-----------------------------------------------------------------
+
+# Intertidal polychaetes
+com_pol_inter <- com_pol %>%
+  rownames_to_column('id') %>%
+  filter(id_pol$method_echant == "Carotte") %>%
+  column_to_rownames('id')
+
+# Remove empty species
+com_pol_inter <- com_pol_inter[,colSums(com_pol_inter)>0]
+
+# Subtidal polychaetes
+com_pol_sub <- com_pol %>%
+  rownames_to_column('id') %>%
+  filter(id_pol$method_echant == "Benne") %>%
+  column_to_rownames('id')
+
+# Remove empty species
+com_pol_sub <- com_pol_sub[,colSums(com_pol_sub)>0]
+
+```
+
+---
+
+## Trait data {.tabset .tabset-pills} 
+
+### i) Missing data exploration (Figure not included in the article)
+
+- **Total number of missing data**
+
+```{r, echo = TRUE, fig.width= 20, fig.height=20}
+
+# Missing data
+#-------------
+
+#Identify where data are missing
+miss_dat <- trait_mat %>%
+  # Remove the Bioturb_R modality that is not express by any of our polychaetes
+  select(-Bioturb_R) %>%
+  select(-Kingdom,-Phylum,-Class,-Order,-Genus,-Species) %>%
+  bind_shadow() %>% 
+  select(Family,species,ends_with("_NA")) %>%
+  gather(variable,value,-Family,-species) %>%
+  filter(!variable %in% c("Family_NA","species_NA")) %>% 
+  mutate(variable=str_replace(variable,"_NA","")) %>%
+  mutate(variable=str_replace(variable,"[.]","-")) %>%
+  left_join(.,trait_list,by=c("variable"="Accronyme")) %>%
+  mutate_if(is.character,as.factor) %>%
+  mutate(variable=factor(variable, levels=unique(variable), ordered=T),Trait=factor(Trait, levels=unique(trait_list$Trait), ordered=T))
+
+# Number of missing data
+summary(miss_dat$value) %>%
+  as.data.frame() %>% 
+  set_colnames("Number of data") %>%
+  rownames_to_column("Status") %>%
+  mutate(Status= recode(Status, "NA" = "Missing", "!NA" = "Available")) %>%
+  kable("html") %>%
+  kable_styling(full_width = F, position="left")
+```
+
+- **Modalities with missing data**
+
+```{r, echo = TRUE, fig.width= 20, fig.height=20}
+
+trait_mat %>%
+  select(-Kingdom,-Phylum,-Class,-Order,-Family,-Genus,-Species,-species) %>%
+  miss_var_summary(.) %>%
+  filter(pct_miss > 0) %>%
+  dplyr::rename("Modality" = "variable", "Number of missing data" = "n_miss", "% of missing data" = "pct_miss") %>%
+  kable("html") %>%
+  kable_styling(full_width = F, position="left")
+
+```
+
+> - 50% of missing data for *Life span* $\Rightarrow$ **Trait removed from the analysis**
+> - 9% of missing data for *Reproduction frequency* $\Rightarrow$ **Missing data were imputed**
+
+- **Distribution of missing data**
+
+```{r, echo = TRUE, fig.width= 25, fig.height=75}
+p <- ggplot(miss_dat,aes(x=variable,y=species,fill=value))
+p <- p + geom_tile(alpha=0.8)
+p <- p + scale_fill_manual(values=c("#1a9641","#d7191c"), labels=c("Available","Missing"),name="Data availability")
+p <- p + theme_light() + theme(text=element_text(size=24),axis.text.x=element_text(angle=90,hjust = 1),strip.text.x=element_text(angle=90),strip.text.y=element_text(angle=0),strip.text=element_text(size=26,face="bold"))
+p <- p + facet_grid(Family~Trait,scales="free",space="free") + xlab("")
+
+plot(p)
+```
+
+### ii) Format the fuzzy-coded trait matrix
+
+```{r data_prep_trait, echo = TRUE}
+
+# Format the fuzzy-coded trait matrix
+#-------------------------------------
+trait_fuz <- trait_mat %>% 
+  # Remove the empty bioturbation modality and the life span trait with lots of missing data
+  select(-Bioturb_R,-ends_with("life_span")) %>%
+  # Select only the species in the community matrix
+  filter(species %in% colnames(com_pol)) %>%
+  # Order the species as in the community matrix
+  slice(match(colnames(com_pol),species)) %>%
+  # Define row names and format the final trait matrix
+  as.data.frame() %>%
+  set_rownames(.$species) %>%
+  select(-Kingdom,-Phylum,-Class,-Order,-Family,-Genus,-Species,-species)
+
+# Recode the matrix to give the same weights to all traits 
+#----------------------------------------------------------
+
+# Create the function to convert the fuzzy coded matrix (going from 0 to 4 for each modality) to a relative coding in which all modality of a given trait sum to 1 for each species
+transfo_traits <- function(x) {
+  if (is.na(sum(x))) { # If we have NA's, gives back NA's
+    rep(NA, length(x))
+  } else if (sum(x) == 0) { #  If we have only 0's, gives back only 0's
+    numeric(length(x))
+  } else { # Else, we get the modality's score and divide it by the sum of the scores of the species for all modalities of this trait
+    x / sum(x)
+  }
+}
+
+# Prepare the trait list to apply the function
+trait_list <- trait_list %>%
+  # Remove the empty bioturbation modality and the life span trait with lots of missing data
+  filter(Accronyme != "Bioturb_R" & Trait != "Life span") %>%
+  # Reorder the list according to the order of the modalities in trait_fuz
+  mutate(Accronyme=str_replace(Accronyme,"-",".")) %>%
+  slice(match(colnames(trait_fuz),Accronyme)) %>%
+  # Reorder the trait factor levels
+  mutate(Trait = factor(Trait, levels=unique(Trait))) %>%
+  droplevels()
+
+# Compute the number of traits
+n_trait <- nlevels(trait_list$Trait)
+
+# Define the start and end point of each trait
+n_mod <- trait_list %>%
+  # For that we compute the number of modalities for each trait
+  group_by(Trait) %>%
+  summarise(n=n()) %>%
+  pull(n) %>%
+  # And we do the cumulative sum
+  cumsum(.) %>%
+  c(0,.)
+
+# Apply the function
+trait_prop <- trait_fuz 
+trait_prop[,] <- NA
+
+for(i in 1:n_trait){
+  # Select all the modalities of the trait i
+  tmp <- trait_fuz[,seq(from=n_mod[i]+1, to=n_mod[i+1], by=1)]
+  # Apply the function to this trait
+  tmp <- t(apply(tmp, 1, transfo_traits))
+  tmp <- as.data.frame(tmp)
+  # Save
+  trait_prop[,seq(from=n_mod[i]+1, to=n_mod[i+1], by=1)] <- tmp
+}
+
+summary(trait_prop) %>%
+  kable("html") %>%
+  kable_styling(full_width = F, position="left") %>%
+  column_spec(column = n_mod+1, border_right = TRUE, include_thead = TRUE)
+
+# Create a vector defining the weight to be given to each modality so that all traits have equal weights in the analyses
+#-------------------------------------------------------------------------------------------
+
+mod_w <- trait_list %>%   
+  # Compute the number of modalities in each trait
+  group_by(Trait) %>%
+  summarise(n_mod=n()) %>%
+  ungroup() %>%
+  # Add this to the trait list
+  left_join(.,trait_list) %>%
+  # Weight each modality so that the sum of the weights equals to 1 for each trait
+  mutate(mod_w = 1/n_mod)
+
+# Vérification que les poids somment bien à 1 pour chaque trait
+mod_w %>%group_by(Trait) %>% summarise(w_tot = sum(mod_w))
+
+# Format the weight vector
+mod_w_tot <- mod_w %>%
+  pull(mod_w) %>%
+  set_names(mod_w$Accronyme)
+
+```
+
+### iii) Missing data imputation
+
+For the reproduction frequency, development mode, and sexual differentiation, data were missing for 9% (21 species), 7% (17), and 1% (3) of the species respectively. For these traits, we imputed missing values using nearest neighbour imputation relying on Gower dissimilarity that accommodates missing data. The imputation approach used in this article was originally developped for continuous traits (which is applicable here with our fuzzy-coded matrix) and was found to be particurlarly suitable when the trait distribution was unbalanced [@taugourdeau2014filling]. Missing traits were imputed based on the median value of the functionally closest species for which the trait was known as well as those falling within a threshold dissimilarity of $0.01\times d_{gower}$, with $d_{gower}$ the dissimilarity between this closest species and the species to be inferred. This procedure gave similar results to imputation based on the 5 nearest neighbours using the kNN function. The species used to infer each missing data were then verified by experts of benthic taxonomy to ensure the ecological soundness of this imputation procedure.
+
+Gower's dissimilarity was computed on the relative scores (and not the raw fuzzy-coded scores) to account for the relative strengths of affinities within each traits (an affinity of 2 for a modality accompanied with an affinity of 2 for another modality of the same trait  - meaning no preference between the two modalities of the trait - did not have the same meaning in our coding scheme that the same affinity of 2 accompanied with an affinity of 3 for the other modality - meaning a slight preference of the species for the second modality). Using the raw fuzzy-coded scores would not have accounted for this difference. 
+
+- **Imputation procedure**
+
+```{r, eval= T}
+
+# Compute the initial functional dissimilarity among species
+dist_sp <- as.matrix(gowdis(x = trait_prop, w = mod_w_tot))
+
+# Format the fuzzy-coded matrix
+trait_fuz_init <- trait_fuz %>%
+  rownames_to_column("species") %>%
+  gather(Modality, value, -species) %>%
+  left_join(.,trait_list,by=c("Modality"="Accronyme")) %>%
+  select(-Modalities,-Type)
+
+# Initiliaze the loop with the dataframe to be filled (_estim to remember that some trait data were estimated)
+trait_fuz_estim <- trait_fuz_init
+
+# We identify the species and traits for which data are missing (note that in this code, when data are missing for one modality, they are missing for all other modalities of the trait) 
+trait_fuz_na <- trait_fuz_init %>%
+  filter(is.na(value)) %>%
+  distinct(species,Trait,value) %>%
+  arrange(species)
+
+# Identify the target species
+target <- unique(trait_fuz_na$species)
+
+# Object to record all modification that are done
+logfile <- NULL
+
+# Missing traits were imputed based on the median value of the functionally closest species for which the trait was known as well as those falling within a threshold of 1% of the dissimilarity between this closest species and the species to be inferred.
+thresh <- 0.01
+
+for ( i in target){
+  
+  # 1) For each target species, we identify which traits have missing data
+  #------------------------------------------------------------------------
+
+  trait_miss <- trait_fuz_na %>% filter(species==i) %>% distinct(Trait) %>% pull()
+  
+  # 2) We identify the functionnaly similar species
+  #------------------------------------------------
+
+  # Sort the distances of the target species with all other species
+  sim_sp <- dist_sp[i,]
+  
+  # Remove the distance of the target species with itself
+  sim_sp <- sim_sp[names(sim_sp)!=i]
+  
+  # Identify the closest species
+  prox_sp <- sort(sim_sp)[1]
+  
+  # Identify the other species whose distance with the target species is within 1% of the distance of the closet species
+  dist_sp_to_use <- sim_sp[ sim_sp <= prox_sp + prox_sp * thresh ]
+  
+  # Retrieve the names of the species whose value will be used
+  sp_to_use <- names(dist_sp_to_use)
+  
+  # Do we have for these species at least one for which we have data for the missing traits 
+  nodata <- trait_fuz_init %>%
+    filter(species %in% sp_to_use & Trait %in% trait_miss) %>%
+    group_by(Trait) %>%
+    # If not, we put TRUE to absence, if we have, we put FALSE.
+    summarise(Absence = all(is.na(value))) %>%
+    pull(Absence)
+  
+  # If we have don't have any data for this trait for the functionnaly closest species and those around (within the threhsold), we print the table of the missing data for these species...
+  if (any(nodata)){
+    print("###########################################")
+    print(paste("Missing data for the closest species that should have been used to estimate the missing trait data of species", i))
+    print("------------------------------------------")
+    print(trait_fuz_init %>% filter(species %in% sp_to_use & Trait %in% trait_miss) %>% select(-Trait) %>% spread(Modality, value))
+  }
+  
+  # ... and we continue the procedure by looking at the following closest species (and those within 1% of its distance with the target species), and so on until we have data...
+  while( any(nodata) ) {
+    
+    # Species already looked at
+    n <- length(sp_to_use)
+    
+    # Identify the following closest species
+    prox_sp <- sort(sim_sp)[1+n]
+    
+    # Identify the species within 1% of the distance of this "closest" species with the target species
+    dist_sp_to_use <- sim_sp[ sim_sp <= prox_sp + prox_sp * thresh ]
+    
+    sp_to_use <- names(dist_sp_to_use)
+    
+    # Check data availability
+    nodata <- trait_fuz_init %>%
+      filter(species %in% sp_to_use & Trait %in% trait_miss) %>%
+      group_by(Trait) %>%
+      summarise(Absence = all(is.na(value))) %>%
+      pull(Absence)
+  }
+  
+  # 3) Get the median of their values (remove NA's if they are any)
+  #--------------------------------------------------------------
+  
+  estim <- trait_fuz_init %>%
+    filter(species %in% sp_to_use & Trait %in% trait_miss) %>%
+    group_by(Trait, Modality) %>%
+    summarise(estimate = median(value,na.rm=T))
+      
+  # 4) Replace the missing values (with the modalities to ensure everything is in the right order)
+  #----------------------------------------------------------------------------------------
+  trait_fuz_estim <- trait_fuz_estim %>%
+    mutate(value=replace(value,species==i & Trait %in% estim$Trait, estim$estimate), Modality=replace(Modality,species==i & Trait %in% estim$Trait, estim$Modality))
+    
+ # 5) We save a record of the species used for the imputation, their distance to the target species and their trait values 
+  #----------------------------------------------------------------------------------------  
+  logfile <- trait_fuz_init %>%
+    filter(species %in% sp_to_use & Trait %in% trait_miss) %>% 
+    select(-Trait) %>%
+    spread(Modality, value) %>%
+    mutate(target=i, DISTANCE = dist_sp_to_use, Missing=paste(as.list(as.character(trait_miss)), collapse=" / ")) %>%
+    select(target,species,DISTANCE,everything()) %>%
+    bind_rows(logfile,.)
+}
+
+# Format the imputed matrix
+trait_fuz_estim <- trait_fuz_estim %>%
+  select(-Trait) %>%
+  spread(Modality,value) %>%
+  remove_rownames(.) %>%
+  column_to_rownames("species") %>%
+  # on réordonne les colonnes comme dans trait_fuz
+  select(colnames(trait_fuz))
+
+# Summary of the functional distances between the species to impute and those used to get the missing data
+logfile <- logfile %>% 
+  arrange(target, DISTANCE) %>%
+  mutate_if(is.character, as.factor)
+
+summary(logfile$DISTANCE)
+```
+
+> The mean distance of the species used to estimate missing data is 0.04. At most, the imputation was made with a species with a dissimilarity of 0.13 with the species to impute. All these functional distances are fairly small compared to those observed across all the dataset (see below). In addition, they are in line with the $d_{gower} \leq 0.05$ criteria used by @taugourdeau2014filling
+>
+>```{r, echo = TRUE}
+hist(dist_sp, main = "", xlab = "Gower distance between species pairs")
+abline(v=summary(logfile$DISTANCE)[c(1,4,6)], col="red")
+tmp <- summary(logfile$DISTANCE)[c(1,4,6)]
+tmp[1] <- tmp[1] - 0.015
+text(x=tmp, y=c(11000,11000,11000), labels=names(summary(logfile$DISTANCE)[c(1,4,6)]), col="red",xpd=T)
+```
+
+- **Comparison with kNN**
+
+```{r}
+
+# Comparison with kNN imputation
+#-------------------------------
+
+# Imputation with median, 5 nearest-neighbours
+trait_fuz_estim_kNN <- kNN(trait_fuz, weights = mod_w_tot, k = 5, numFun = median, weightDist = FALSE, imp_var = FALSE)
+
+# Format the output
+trait_fuz_estim_kNN <- trait_fuz_estim_kNN %>%
+  mutate(species = rownames(trait_fuz)) %>%
+  gather(variable,kNN_imputation, -species)
+
+# Compare the two imputation approaches
+compar_imputation <- trait_fuz_estim %>%
+  rownames_to_column("species") %>%
+  gather(variable,article_imputation,-species) %>%
+  full_join(.,trait_fuz_estim_kNN)
+
+# Differences between the two imputations
+diff_imputation <- compar_imputation %>% filter(article_imputation != kNN_imputation)
+
+# Number of missing data originnaly
+n_miss <- trait_prop %>% gather(variable,value) %>% filter(is.na(value)) %>% nrow()
+
+# Number of different imputations between the two approaches
+paste("Number of different imputations between our approach and kNN:"," ",
+nrow(diff_imputation),
+"/",
+n_miss,
+sep="")
+
+# List of the species and modalities that would have change with kNN imputation
+diff_imputation %>%
+  mutate(diff = article_imputation - kNN_imputation) %>%
+  arrange(diff) %>%
+  select(Species = species, Modality = variable, Article_imputation = article_imputation, kNN_imputation) %>%
+  kable("html") %>%
+  kable_styling(full_width = F, position="left")
+
+```
+
+- **Format the imputed matrix**
+
+```{r}
+
+# Recode the imputed fuzzy-coded matrix to give the same weights to all traits 
+#----------------------------------------------------------
+
+# Apply the function
+trait_prop_estim <- trait_fuz_estim 
+trait_prop_estim[,] <- NA
+
+for(i in 1:n_trait){
+  # Select all the modalities of the trait i
+  tmp <- trait_fuz_estim[,seq(from=n_mod[i]+1, to=n_mod[i+1], by=1)]
+  # Apply the function to this trait
+  tmp <- t(apply(tmp, 1, transfo_traits))
+  tmp <- as.data.frame(tmp)
+  # Save
+  trait_prop_estim[,seq(from=n_mod[i]+1, to=n_mod[i+1], by=1)] <- tmp
+}
+
+```
+
+- **Compare the trait-dissimilarity matrix computed from the initial and imputed trait matrix**
+
+```{r}
+
+dist_init <- gowdis(x = trait_prop, w = mod_w_tot)
+
+dist_estim <- gowdis(x = trait_prop_estim, w = mod_w_tot)
+
+qplot(dist_init,dist_estim) + 
+  geom_pointdensity(alpha=0.5) + 
+  geom_abline(intercept=0, slope = 1, col="red") +
+  scale_color_viridis() +
+  ylab("Dissimilarity from the \n imputed trait matrix") +
+  xlab("Dissimilarity from the initial trait matrix")
+```
+
+
+### iv) Assemblage‐by‐trait matrix
+
+There are two ways to compute the assemblage-by-trait matrix containing the abundance of each modality in each site [also referred to as *absolute mean value of modality*, Fig.4 of @Beauchard2017] :
+
+1. One can first compute the $CWM$ (Community Weighted Mean) matrix through the `functcomp` function of the FD package for instance. The CWM matrix represents the abundance-weighted mean affinity of a site to the trait modalities, computed as $Mean~affinity = \frac{\sum Affinity_{[i]} \times Abondance_{[i]}}{Abondance_{Tot}}$. The latter can then be multiplied by the total abundance in each site to have the abundance of the modalities.
+
+2. A more straightforward approach would be to do the matrix product of the site-by-species matrix with the species-by-trait matrix.
+
+> Both are be equivalent when there are no NA's, which is the case given that we imputed all missing values. However, note that both approach would differ in the presence of NA's. In the first approach, the CWM exclude NA's in its computation. When multiplied back with the total abundance of each site (and if including in this total abundance the species for which trait data are missing), all traits will have the same total abundance (and missing data would then be considered as mean values). In contrast, with the second approach, the total abundance of the traits (and therefore their potential weights in some multivariate analyses) would vary according to their number of missing values (NA's are just discarded).
+> Note also that the `functcomp` function consider modalities with only 0 and 1 as binary by defaults. To treat these variables as numeric (and therefore take them into account in the CWM), we need to use the `bin.num` argument.
+
+```{r, eval=T}
+
+# Approach 1 : with the CWM
+#-------------------------
+
+# Compute CWM (we need to tell functcomp that trait_prop should considered as numerical) 
+CWM_tot <- functcomp(x=trait_prop_estim,a=as.matrix(com_pol),bin.num=c("Bioturb_N")) %>%
+  # Ensure that all variables are considered as numerical
+  mutate_all(function(x){as.numeric(as.character(x))})
+
+# Compute the abundance matrix
+com_trait_estim_CWM <- rowSums(com_pol) * CWM_tot
+rownames(com_trait_estim_CWM) <- rownames(com_pol)
+
+# Check that the sum of abundances for each trait is equal to the total abundance of the sites
+check_CWM <- com_trait_estim_CWM %>%
+  rownames_to_column("id") %>%
+  gather(Modality, value,-id) %>%
+  left_join(., trait_list, by=c("Modality"="Accronyme")) %>%
+  group_by(id,Trait) %>%
+  summarise(value = sum(value)) %>%
+  left_join(., data.frame(id=rownames(com_pol),tot=rowSums(com_pol))) %>%
+  mutate(match_init = near(value,tot))
+
+all(check_CWM$match_init)
+
+# Approach 2 : matrix product
+#-----------------------------
+
+com_trait_estim_MP <- as.matrix(com_pol) %*% as.matrix(trait_prop_estim)
+
+# Equivalence between both?
+#--------------------------
+
+all.equal(as.matrix(com_trait_estim_CWM),com_trait_estim_MP)
+
+
+# Rename the matrix used in the following sections
+#-------------------------------------------------
+
+com_trait_estim <- com_trait_estim_MP
+
+rm(com_trait_estim_MP,com_trait_estim_CWM)
+
+```
+
+### v) Preliminary analyses (Not included in the article) {.active}
+
+- **Correlation between modalities**
+
+```{r, echo = TRUE, fig.width= 15, fig.height=15}
+
+mod_cor <- cor(trait_fuz,method="kendall",use="pairwise.complete.obs")
+
+ggcorrplot(mod_cor, hc.order = TRUE, type = "upper", lab = FALSE, lab_size = 3, method="circle", colors = c("tomato2", "white", "springgreen3"), title="Kendall correlation on the raw fuzzy-coded trait matrix", ggtheme=theme_bw)
+
+```
+
+```{r, echo = TRUE, fig.width= 15, fig.height=15}
+
+mod_cor <- cor(trait_fuz_estim,method="pearson",use="pairwise.complete.obs")
+
+ggcorrplot(mod_cor, hc.order = TRUE, type = "upper", lab = FALSE, lab_size = 3, method="circle", colors = c("tomato2", "white", "springgreen3"), title="Pearson correlation on the imputed fuzzy-coded trait matrix", ggtheme=theme_bw)
+
+```
+
+> **The traits and modalities chosen does not appear redundant**
+> 
+> The most correlated modalities are :
+>
+> - Inevitable within-trait trade-offs :
+>     - Micro/macrophageous
+>     - Infauna/Epifauna
+>     - Hermaphrodite/Gonochoric
+>     - Direct/planktonic developtment
+>
+> - Inevitable across-trait associations :
+>    - Parasitic/attached
+>
+> - Predator & scavenger with macrophagous and epibenthic lifestyle
+
+- **Association between modalities and taxonomy (at the Family level)**
+
+First, the number of species of each Family expressing each modality of a trait was computed to get a contingency table $Families~\times~Modalities$
+
+Then, the contribution of each cell of this contingency table to the $\chi^2$ was computed as:
+
+$Contribution~\chi^2=\frac{(Observed-Expected)^2}{Expected}$ 
+This was done for each trait separately
+
+```{r, echo = TRUE, fig.width= 25, fig.height=35}
+
+# Compute presence/absence of family/modality association
+trait_fam <- trait_mat %>% 
+  select(-Kingdom,-Phylum,-Class,-Order,-Genus,-Species) %>%
+  gather(trait,value,-Family,-species) %>%
+  # Transform into presence/absence and replace NA's by absences
+  mutate(value=if_else(value > 0, 1, 0,0)) %>%
+  # Compute the number of species of each family associated to each modality
+  group_by(Family,trait) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  # Build the FamilyxModality contingency table
+  spread(trait,value) %>%
+  # Reorder and remove the Bioturb_R modality
+  select(Family,trait_list$Accronyme) %>%
+  as.data.frame()
+
+# Set the rownames
+trait_fam_c <- trait_fam %>%
+  set_rownames(.$Family) %>%
+  select(-Family)
+
+# Contributions are computed for each trait separately
+khi_contrib <- NULL
+
+for(i in 1:n_trait){
+  # Select the modalities of the trait
+  tmp <- trait_fam_c[,seq(from=n_mod[i]+1, to=n_mod[i+1], by=1)]
+  
+  # Compute expected values
+  khi <- chisq.test(tmp)
+
+  # Compute the contribution to the khi^2
+  tmp <- ((khi$observed - khi$expected)^2) / khi$expected
+  
+  # Save
+  khi_contrib <- cbind(khi_contrib,tmp)
+}
+
+khi_contrib <- khi_contrib %>%
+  as.data.frame() %>%
+  mutate(Family=rownames(.)) %>%
+  gather(Modality,value,-Family) %>%
+  left_join(.,trait_list,by=c("Modality"="Accronyme"))
+
+# Plot
+p <- ggplot(khi_contrib,aes(x=Modality,y=Family,fill=value))
+p <- p + geom_tile(col="white",alpha=0.7)
+p <- p + facet_grid(Family~Trait,scales="free",space="free",switch="y",labeller=label_wrap_gen(width = 10, multi_line = TRUE))
+p <- p + scale_fill_gradient(low = "white", high = "black",na.value = "white",name=expression(Contribution~chi^2))
+p <- p + theme_light() + xlab("")
+p <- p + theme(text=element_text(size=24),axis.text.x=element_text(angle=90,hjust = 1),strip.text.x=element_text(angle=90),strip.text.y=element_text(angle=45),strip.text=element_text(size=26,face="bold"),axis.text.y=element_blank(),axis.ticks.y=element_blank())
+
+plot(p)
+
+```
+
+##
+
+---
+
+## Metadata (environment & coordinates)
+
+```{r}
+
+# Environmental data
+envir <- depth_fetch %>%
+  select(-latitude,-longitude) %>%
+  left_join(.,previmer) %>%
+  left_join(.,granulo) %>%
+  # Remove the site of Keraliou with incomplete data
+  filter(site!="Rade de Brest - Keraliou") %>%
+  # Clean site names and order the sites and habitats as in the community data
+  mutate(site=recode(site,"Saint-Brieuc"="Baie de Saint-Brieuc")) %>%
+  mutate(site=ifelse(site=="Baie de Saint-Brieuc" & theme=="Bancs de Maërl","Arcouest",site)) %>%
+  # Translate the habitats
+  mutate(theme=recode(theme, "Bancs de Maërl" = "Subtidal maerl beds", "Subtidal Meuble" = "Subtidal bare sediments", "Herbiers Intertidaux" = "Intertidal seagrass beds", "Intertidal Meuble" = "Intertidal bare sediments")) %>%
+  left_join(id_pol,.) %>%
+  rename(Mud = mud)
+
+# Coordinates
+coord <- coord %>%
+  # Change the name of the sites as in the community data
+  mutate(site = case_when(
+    str_detect(point_name,"Rozegat") ~ "Rade de Brest - Rozegat",
+    str_detect(point_name,"Keraliou") ~ "Rade de Brest - Keraliou",
+    TRUE ~ as.character(site_name)
+  )) %>%
+  # Remove the site of Keraliou with incomplete data
+  filter(site!="Rade de Brest - Keraliou") %>%
+  # Rename the sites
+  mutate(site=recode(site,"Saint-Brieuc"="Baie de Saint-Brieuc")) %>%
+  mutate(site=ifelse(site=="Baie de Saint-Brieuc" & theme=="Bancs de Maërl","Arcouest",site)) %>%
+  # Select only the central point of the sites as well as the only point in Pierre Noire
+  filter(str_detect(point_name,"2") | str_detect(point_name,".*B$") | point_name=="PN") %>%
+  select(theme,site,longitude,latitude) %>% 
+  # Translate the habitats
+  mutate(theme=recode(theme, "Bancs de Maërl" = "Subtidal maerl beds", "Subtidal Meuble" = "Subtidal bare sediments", "Herbiers Intertidaux" = "Intertidal seagrass beds", "Intertidal Meuble" = "Intertidal bare sediments"))
+   
+```
+
+---
+
+# Summary of the data object 
+
+- **Metadata**
+
+  - `id_tot` : sample metadata for the whole community data
+  - `id_pol` : sample metadata for the polychaetes data
+
+- **Community matrix (site-by-species matrix)**
+
+  - `com_tot` : whole community matrix (Dimensions : `r dim(com_tot)`)
+  - `com_pol` : community matrix with only polychaetes (Dimensions : `r dim(com_pol)`)
+  - `com_pol_inter` : community matrix with only the polychaetes for the intertidal (Intertidal bare sediments and Intertidal seagrass beds;Dimensions : `r dim(com_pol_inter)`)
+  - `com_pol_sub` : community matrix with only the polychaetes for the subtidal (Subtidal bare sediments and Subtidal maerl beds;Dimensions : `r dim(com_pol_sub)`)
+
+- **Species-by-trait matrix**
+
+  - `trait_list` : the list of the traits and associated modalities 
+
+  - `trait_fuz` : trait matrix fuzzy coded (Dimensions : `r dim(trait_fuz)`)
+  - `trait_prop` : trait matrix transformed for all modalities of each trait to sum to 1 (Dimensions : `r dim(trait_prop)`)
+  - `trait_fuz_estim` : trait matrix fuzzy coded with imputed missing data
+  - `trait_prop_estim` : the imputed trait matrix transformed for all modalities of each trait to sum to 1 (Dimensions : `r dim(trait_prop_estim)`)
+  - `mod_w_tot` : vector containing the weights to be given to each modality so that all traits have equal weights in the analyses at the end, irrespective of their number of associated modalities
+
+- **Trait abundance matrix (site-by-trait matrix)**
+
+  - `com_trait_estim` : Site-by-trait matrix computed from the imputed species-by-trait matrix (Dimensions : `r dim(com_trait_estim)`)
+
+---
+
+# Figure 1
+
+Figure 1 was made on Inkscape with the following R outputs
+
+## Brittany
+
+```{r, eval = T}
+
+# Format the data 
+#----------------
+
+map_coord <- id_pol %>%
+  distinct(theme,site) %>%
+  full_join(., coord) %>%
+  mutate(site=factor(site,levels=c("Baie du Mont Saint-Michel","Saint-Benoit","Saint-Malo","Saint-Briac","Saint-Cast","Baie de Saint-Brieuc","Arcouest","Sept-Iles","Lannion","Saint-Efflam","Pierre Noire","Morlaix","Callot","Sainte-Marguerite","Molene","Blancs Sablons","Iroise","Camaret","Roscanvel","Rade de Brest",
+"Rade de Brest - Rozegat","Rade de Brest - Larmor","Baie de Douarnenez Nord","Plage de l'Aber","Baie de Douarnenez Sud","Audierne","Glenan","Concarneau","Trevignon","Gavres","Erdeven","Lorient Etel","Plouharnel","Quiberon","Belle-ile","Meaban","Kerjouanno","Arradon","Vilaine Large Sud","Vilaine Large Nord","Vilaine Cote","Damgan"),ordered=T)) %>%
+  mutate(site_number=as.numeric(site)) %>%
+  as.data.frame(.)
+
+# Map
+#------
+
+# Retrieve a map layer for France
+france_data <- map_data("france")
+names(france_data) <- c("X","Y","PID","POS","region","subregion")
+
+# Zoom on Brittany
+xlim <- c(-5.5,-1)
+ylim <- c(46.5,49.5)
+francemap <- clipPolys(france_data, xlim=xlim,ylim=ylim, keepExtra=TRUE)
+
+p <- ggplot(data=map_coord,mapping=aes(y=latitude,x=longitude,fill=theme)) 
+p <- p + coord_map(xlim=xlim,ylim=ylim)
+p <- p + geom_polygon(data=france_data,aes(X,Y,group=PID),fill="gray85",inherit.aes=F,show.legend=F) 
+p <- p + geom_path(data=france_data,aes(X,Y,group=PID),inherit.aes=F,show.legend=F, col="gray85") 
+p <- p + ylab("")+ xlab("")
+p <- p +scale_y_continuous(breaks=c(46.5,47,47.5,48,48.5,49,49.5,50), labels = c("46.5°N","47ºN","47.5°N", "48ºN","48.5°N", "49ºN","49.5°N","50°N")) 
+p <- p + scale_x_continuous(breaks=c(-6,-5,-4,-3,-2,-1,0), labels = c("6°W","5°W","4°W","3°W","2°W","1°W","0°")) 
+# Add the points
+p <- p + geom_point(shape=21,size=4,alpha=0.5,col="black")
+# Contour without transparency
+p <- p + geom_point(aes(y=latitude,x=longitude),inherit.aes=F,shape=21,size=4,fill=alpha("white",0),col="black")
+# Color for the habitats
+p <- p + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"),name="Habitat")
+p <- p + theme_map() + theme(axis.ticks=element_line(colour="gray45"),axis.text=element_text(colour="gray45"),panel.background = element_rect(fill="aliceblue"), legend.position="none")
+p <- p + guides(fill=guide_legend(override.aes=list(size=15,shape=22)))
+
+# Add the scale
+map <- p + scalebar(data=map_coord,dist=50,dist_unit="km",st.bottom=F,st.size=4,transform=TRUE,model="WGS84",anchor=c(x=-4,y=46.6))
+
+plot(map)
+
+```
+
+## France
+
+```{r}
+
+# Color Brittany (Bretagne)
+fill_bret <- rep("gray90",nrow(france_data))
+fill_bret[france_data$region=="Finistere"] <- "black"
+fill_bret[france_data$region=="Morbihan"] <- "black"
+fill_bret[france_data$region=="Ille-et-Vilaine"] <- "black"
+fill_bret[france_data$region=="Cotes-Darmor"] <- "black"
+
+
+france_map <- ggplot() + coord_map()
+france_map <- france_map + scale_x_continuous(expand=c(0,0))
+france_map <- france_map + theme(axis.ticks=element_blank(), axis.title=element_blank(), axis.text=element_blank())
+france_map <- france_map + geom_polygon(data=france_data, mapping=aes(x=X, y=Y,group=PID), fill=fill_bret,col=fill_bret) 
+france_map <- france_map + theme_void() 
+
+france_map
+
+```
+
+## World
+
+```{r}
+
+world <- map_data("world")
+
+# Color France
+fill_world <- rep("gray90",nrow(world))
+fill_world[world$region=="France"] <- "black"
+
+worldmap <- ggplot(world, aes(x=long, y=lat, group=group)) 
+worldmap <- worldmap + geom_path()
+worldmap <- worldmap + scale_y_continuous(breaks=(-2:2) * 30) 
+worldmap <- worldmap + scale_x_continuous(breaks=(-4:4) * 45)
+worldmap <- worldmap + coord_map("ortho", orientation=c(41, -5, 0)) + ylab("") + xlab("")
+worldmap <- worldmap + geom_polygon(data=world, mapping=aes(x=long, y=lat,group=group), fill=fill_world,col="gray45") 
+worldmap <- worldmap + theme_light() + theme(axis.text=element_blank(),axis.ticks=element_blank(),panel.border=element_blank())
+
+worldmap
+
+```
+
+---
+
+# Figure 2 & Figure S7
+
+## Included in the article
+
+```{r, fig.width=14, fig.height=7, eval = TRUE}
+
+# Hellinger transformation 
+com_pol_hell <- decostand(com_pol,"hellinger") 
+
+# PCA computation
+com_pol_pca <- rda(com_pol_hell)
+
+# Axis 1 & 2 of the PCA
+p <- pca_ggplot(pca = com_pol_pca, metadata = id_pol, axes=c(1,2), goodness.axis = 2, goodness.tresh = 0.3, main.group = "theme", second.group = "method_echant", nudge.x = c(0.04, -0.08, 0.05, -0.14), nudge.y = c(-0.09, -0.12, 0.18, 0.1), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,22), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+```
+
+```{r, eval = FALSE}
+ggsave(file="PCA_pol_1_2.svg", plot=p, width=16, height=8)
+```
+
+## Not included in the article
+
+### Exploration of the other PCA axes
+
+```{r, fig.width=14, fig.height=7}
+
+# Screeplot of eigenvalues
+screeplot(com_pol_pca,bstick=TRUE)
+
+# Axes 1 & 3 of the PCA
+pca_ggplot(pca = com_pol_pca, metadata = id_pol, axes=c(1,3), goodness.axis = 3, goodness.tresh = 0.4, main.group = "theme", second.group = "method_echant", nudge.x = c(0.05, -0.08, 0.03, -0.12), nudge.y = c(0.06, -0.12, 0.13, 0.19), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+# Axes 1 & 4 of the PCA
+pca_ggplot(pca = com_pol_pca, metadata = id_pol, axes=c(1,4), goodness.axis = 4, goodness.tresh = 0.5, main.group = "theme", second.group = "method_echant", nudge.x = c(0.05, 0.105, 0.08, -0.04), nudge.y = c(-0.07, 0.15, 0.1, -0.15), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+```
+
+### Comparison with the whole community data
+
+```{r, fig.width=14, fig.height=7}
+
+# Hellinger transformation 
+com_pol_hell <- decostand(com_pol,"hellinger") 
+
+# PCA computation
+com_pol_pca <- rda(com_pol_hell)
+
+# Screeplot of eigenvalues
+screeplot(com_pol_pca,bstick=TRUE)
+
+# Axes 1 & 2 of the PCA
+pca_ggplot(pca = com_pol_pca, metadata = id_pol, axes=c(1,2), goodness.axis = 2, goodness.tresh = 0.3, main.group = "theme", second.group = "method_echant", nudge.x = c(0.04, -0.08, 0.05, -0.14), nudge.y = c(-0.09, -0.12, 0.18, 0.1), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+# Axes 1 & 3 of the PCA
+pca_ggplot(pca = com_pol_pca, metadata = id_pol, axes=c(1,3), goodness.axis = 3, goodness.tresh = 0.4, main.group = "theme", second.group = "method_echant", nudge.x = c(0.05, -0.08, 0.03, -0.12), nudge.y = c(0.06, -0.12, 0.13, 0.19), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+# Axes 1 & 4 of the PCA
+pca_ggplot(pca = com_pol_pca, metadata = id_pol, axes=c(1,4), goodness.axis = 4, goodness.tresh = 0.5, main.group = "theme", second.group = "method_echant", nudge.x = c(0.05, 0.105, 0.08, -0.04), nudge.y = c(-0.07, 0.15, 0.1, -0.15), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+```
+
+---
+
+# Figure 3
+
+Here, the Euclidean distance between species was computed from the imputed trait matrix, but note that an alternative approach would have been to use the Gower dissimilarity (on the imputed or raw matrix as this dissimilarity accomodates missing values). Both approach yielded similar results.
+
+> Code to compute the Gower distance (square-rooted to retrieve euclidean properties) on the imputed matrix
+>
+>```{r}
+trait_gowdist <- sqrt(gowdis(trait_prop_estim, mod_w_tot))
+```
+
+We also remove assemblages with less than 5 species in order to be able to keep 5 PCoA axes (out of 31) for the calculation of the Fric, which leads to a quality of the reduced-space representation of $0.655$.
+
+```{r, echo = TRUE}
+
+# Check that all traits are coded as numeric
+all(apply(trait_prop_estim,2, is.numeric))
+
+# Compute the Euclidean distance among species traits
+trait_euclidist <- dist(trait_prop_estim)
+
+# Remove assemblages with less than 5 species (in order to keep 5 PCoA axes for the calculation of the indices)
+com_tmp <- com_pol[specnumber(com_pol) > 5, ]
+id_tmp <- id_pol[specnumber(com_pol) > 5, ]
+
+# Compute the indices from dbFD
+#------------------------------
+
+FD_tot_estim <- dbFD(trait_euclidist, com_tmp, stand.x = FALSE, m = "max", stand.FRic = T, scale.RaoQ = T, w.abun = T) 
+
+# Format the output of dbFD
+tmp_indic <- FD_tot_estim[sapply(FD_tot_estim,length,simplify=T)==nrow(id_tmp)] %>% # Keep only the object whose length is equal to the number of sites (in order to extract only the indices from the dbFD outputs)
+  map_dfc(as.vector) %>%
+  bind_cols(id_tmp,.) %>%
+  left_join(id_pol,.) %>%
+  gather(metric,value,-theme,-mini_theme,-site,-method_echant,-annee) %>%
+  mutate_if(is.character,as.factor) %>%
+  mutate(metric=factor(metric,levels=c("nbsp","sing.sp","FRic","FEve","FDiv","FDis","RaoQ"))) %>%
+  mutate(metric=recode(metric, "RaoQ"="RaoQ_stand"))
+
+# Compute redundancy
+#--------------------
+
+redundancy_tot_estim <- rao.diversity(com_pol,trait_prop_estim)
+
+# Format the output : Remove the call form the list and transform into a dataframe
+tmp_redund <- redundancy_tot_estim[-1] %>% 
+  as.data.frame() %>%
+  # Extract the rownames that identify the samples (ech for echantillon in french)
+  rownames_to_column("ech") %>%
+  # Compute the FRed 
+  mutate(FRed = 1- (FunRao / Simpson), 
+         sp_rich = as.numeric(specnumber(com_pol)), 
+         abond_tot = as.numeric(rowSums(com_pol))) %>%
+  # Gather
+  gather(metric,value, -ech) %>% 
+  # Recreate the id
+  mutate(mini_theme=sapply(str_split(.$ech,"_"),'[[',1,simplify=T), site=sapply(str_split(.$ech,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$ech,"_"),'[[',3,simplify=T)) %>%
+  # Join with metadata to order the output
+  left_join(id_pol,.) %>%
+  select(-ech) %>%
+  mutate(metric=factor(metric,levels=c("abond_tot","sp_rich","Simpson","FunRao","FRed","FunRedundancy"),ordered=T)) %>%
+  # We remove the FunRedundancy compute as "Simpson - Rao" to keep only the one we want : 1 - Rao/Simpson
+  filter(metric != "FunRedundancy") %>%
+  droplevels() %>%
+  mutate(metric=recode(metric, "FunRao"="RaoQ_syn")) %>%
+  mutate_if(is.character,as.factor)  
+
+```
+
+## Included in the article
+
+```{r, eval = TRUE}
+
+# Bind all the indices
+#---------------------
+
+func_indic <- bind_rows(tmp_indic,tmp_redund) %>%
+  mutate(metric=factor(metric,levels=c("abond_tot","sp_rich","nbsp","sing.sp","Simpson","FRic","FEve","FDiv","FDis","RaoQ_stand","RaoQ_syn","FRed"),ordered=T)) %>%
+  filter(metric %in% c("abond_tot","sp_rich","nbsp","Simpson","FRic","FEve","FDiv","FDis")) %>%
+  mutate(metric=recode(metric, "abond_tot" = "Abundance", "sp_rich" = "Richness", "nbsp" = "Richness_assemblages_with_more_than_5_species")) %>%
+  mutate(metric=factor(metric,levels=c("Abundance","Richness","Richness_assemblages_with_more_than_5_species","Simpson","FRic","FEve","FDiv","FDis"),ordered=T))
+
+# How does the removal of assemblages with less than 6 species influence the overall richness of the habitat ? 
+func_indic %>% filter(metric %in% c("Richness","Richness_assemblages_with_more_than_5_species")) %>% group_by(theme,metric) %>% skim(value)
+
+```
+
+> Note that for total abundance and taxonomic richness, assemblages with <= 5 species were included, while they were removed for functional indices computation. 
+> The removal of these assemblages with <= 5 species only concerns/affects 14 assemblages of Intertidal bare sediment 
+
+```{r, fig.height = 10,fig.width = 15}
+
+# Taxnomic indices
+#-----------------
+
+taxo_div_indic <- func_indic %>%
+  filter(metric %in% c("Abundance","Richness","Simpson"))
+
+# Compute the mean value
+taxo_div_indic_mean <- taxo_div_indic %>%
+  group_by(theme,metric) %>%
+  summarise(mu=mean(value,na.rm=T)) %>%
+  # Define the limits of the segment we want to draw
+  mutate(ymu = case_when(
+   theme=="Subtidal maerl beds" ~ 1.4,
+   theme=="Subtidal bare sediments" ~ 2.4,
+   theme=="Intertidal seagrass beds" ~ 3.4,
+   theme=="Intertidal bare sediments" ~ 4.4
+  ))
+
+# Plot
+p_taxo <- ggplot(taxo_div_indic,aes(x=value, y = theme, fill=theme, height = ..density..)) 
+p_taxo <- p_taxo +  geom_density_ridges(aes(point_color=theme),alpha = .5, scale=0.7, point_alpha = .5, jittered_points = TRUE, position = position_raincloud(adjust_vlines = TRUE, height=0.2))
+p_taxo <- p_taxo + facet_wrap(~metric,scales="free_x", ncol=4)
+p_taxo <- p_taxo + geom_segment(data=taxo_div_indic_mean,aes(x=mu,xend=mu,y=theme,yend=ymu),inherit.aes=F)
+p_taxo <- p_taxo + geom_point(data=taxo_div_indic_mean,aes(x=mu,y=ymu, fill=theme), shape= 21, size=2.5 ,inherit.aes=F)
+p_taxo <- p_taxo + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"), guide = FALSE)
+p_taxo <- p_taxo + scale_discrete_manual("point_color", values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"), guide = FALSE)
+p_taxo <- p_taxo + ylab("") + xlab("")  + theme_light() + theme(panel.grid.minor = element_blank(), strip.text=element_text(face="bold",colour="black"), text=element_text(size=16))
+
+
+# Functional indices
+#-------------------
+
+func_div_indic <- func_indic %>%
+  filter(metric %in% c("FRic","FEve","FDiv","FDis"))
+
+# Compute the mea,
+func_div_indic_mean <- func_div_indic %>%
+  group_by(theme,metric) %>%
+  summarise(mu=mean(value,na.rm=T)) %>%
+  # Define the limits of the segment we want to draw
+  mutate(ymu = case_when(
+   theme=="Subtidal maerl beds" ~ 1.4,
+   theme=="Subtidal bare sediments" ~ 2.4,
+   theme=="Intertidal seagrass beds" ~ 3.4,
+   theme=="Intertidal bare sediments" ~ 4.4
+  ))
+
+# Représentation
+p_func <- ggplot(func_div_indic,aes(x=value, y = theme, fill=theme, height = ..density..)) 
+p_func <- p_func + geom_density_ridges(aes(point_color=theme),alpha = .5, scale=0.7, point_alpha = .5, jittered_points = TRUE, position = position_raincloud(adjust_vlines = TRUE, height=0.2))
+p_func <- p_func + facet_wrap(~metric,scales="free_x", ncol=4)
+p_func <- p_func + geom_segment(data=func_div_indic_mean,aes(x=mu,xend=mu,y=theme,yend=ymu),inherit.aes=F)
+p_func <- p_func + geom_point(data=func_div_indic_mean,aes(x=mu,y=ymu, fill=theme), shape= 21, size=2.5 ,inherit.aes=F)
+p_func <- p_func + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"), guide = FALSE)
+p_func <- p_func + scale_discrete_manual("point_color", values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"), guide = FALSE)
+p_func <- p_func + ylab("") + xlab("")  + theme_light() + theme(panel.grid.minor = element_blank(), strip.text=element_text(face="bold",colour="black"), text=element_text(size=16))
+
+grid.arrange(p_taxo,p_func, ncol=3, widths = c(1, 10, 1), heights=c(1,1), layout_matrix = rbind(c(NA, 1, NA), c(2, 2, 2))) # export size : 1000*1200
+
+```
+
+```{r, eval= FALSE}
+
+p <- grid.arrange(p_taxo,p_func, ncol=3, widths = c(1, 10, 1), heights=c(1,1), layout_matrix = rbind(c(NA, 1, NA), c(2, 2, 2))) 
+
+ggsave(file="Alpha_indices.svg", plot=p, width=12, height=10)
+
+```
+
+## Not included in the article
+
+- **Distribution of all indices explored during this study**
+
+```{r, echo = TRUE, fig.width=30, fig.height=25}
+
+# Bind all the indices
+#---------------------
+
+func_indic_bis <- bind_rows(tmp_indic,tmp_redund) %>%
+  mutate(metric=factor(metric,levels=c("nbsp","sing.sp","Simpson","FRic","FEve","FDiv","FDis","RaoQ_stand","RaoQ_syn","FRed"),ordered=T))
+
+# Calcule de la mediane par année
+tmp_med <- func_indic_bis %>%
+  group_by(theme,annee,metric) %>%
+  summarise(med=median(value,na.rm=T)) %>%
+  # On définit les limites de segments à tracer
+  mutate(ymaxmed = case_when(
+   theme=="Subtidal maerl beds" ~ 1.4,
+   theme=="Subtidal bare sediments" ~ 2.4,
+   theme=="Intertidal seagrass beds" ~ 3.4,
+   theme=="Intertidal bare sediments" ~ 4.4
+  )) 
+
+# Représentation
+p <- ggplot(func_indic_bis,aes(x=value, y = theme, fill=theme)) 
+p <- p + geom_joy2(alpha = .5,scale=0.9)
+p <- p + facet_grid(annee~metric,scales="free_x")
+p <- p + geom_segment(data=tmp_med,aes(x=med,xend=med,y=theme,yend=ymaxmed),inherit.aes=F, linetype="solid",size=1.7, col = "black")
+p <- p + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"))
+p <- p + ylab("")  + theme(panel.grid.minor = element_blank(), text=element_text(size=28), strip.text=element_text(face="bold"), legend.position = "none")
+
+plot(p)
+
+```
+
+---
+
+# Figure 4
+
+## Computation
+
+### Observed functional diversity
+
+```{r}
+
+# Compute Rao's Q 
+fd <- rao.diversity(com_pol,trait_prop_estim)
+
+# Format the output
+obs_div <- data.frame(Samples = rownames(com_pol), RaoQ = fd$FunRao) %>% 
+  # Recreate the samples id
+  mutate(mini_theme=sapply(str_split(.$Samples,"_"),'[[',1,simplify=T), site=sapply(str_split(.$Samples,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$Samples,"_"),'[[',3,simplify=T)) %>%
+  mutate_if(is.character,as.factor) %>%
+  rename(RaoQ_obs = RaoQ) %>%
+  select(-Samples)
+
+```
+
+### Null model
+
+```{r null_model_all-trait-together_trialswap}
+
+# Initialisation
+#---------------
+
+set.seed(1)
+null_model<- "trialswap"
+nperm <- 1000
+
+mat_trait <- trait_prop_estim
+
+res <- NULL
+
+# Loop for each permutation
+#--------------------------
+
+for(i in seq(nperm)){
+  
+    # Permute species separately within the intertidal and within the subtidal
+    com_inter_i <- randomizeMatrix(com_pol_inter, null.model = null_model, iterations = 100000)
+    com_sub_i <- randomizeMatrix(com_pol_sub, null.model = null_model, iterations = 100000)
+    
+    # Compute Rao's Q
+    fd_inter_i <- rao.diversity(com_inter_i,mat_trait)
+    fd_sub_i <- rao.diversity(com_sub_i,mat_trait)
+    
+    # Save the results
+    res_inter_i <- data.frame(Permutation = i, Samples = rownames(com_inter_i), RaoQ = fd_inter_i$FunRao)
+    res_sub_i <- data.frame(Permutation = i, Samples = rownames(com_sub_i), RaoQ = fd_sub_i$FunRao)
+        
+    res <- bind_rows(res,res_inter_i,res_sub_i)
+}
+
+
+# Format the output
+#------------------
+
+null_div_swap <- res %>% 
+  # On recréer les colonnes d'identification
+  mutate(mini_theme=sapply(str_split(.$Samples,"_"),'[[',1,simplify=T), site=sapply(str_split(.$Samples,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$Samples,"_"),'[[',3,simplify=T)) %>%
+  mutate_if(is.character,as.factor)
+
+# Compute the mean and sd across the randomized communities for each site and year (annee in French), and habitat (mini_theme here) 
+#-----------------------------------------------------------------------------------
+
+null_div_ses_swap <- null_div_swap %>%
+  group_by(mini_theme,site,annee) %>%
+  summarise(n = n(), RaoQ_mu = mean(RaoQ), RaoQ_sd = sd(RaoQ))
+
+```
+
+### Compute SES values
+
+```{r}
+
+# Merge observed and null values to compute the SES
+ses <- full_join(obs_div,null_div_ses_swap) %>%
+  # On joint les identifiants des échantillons 
+  right_join(id_pol,.) %>%
+  # On calcule les SES
+  mutate(SES_Rao = ((RaoQ_obs - RaoQ_mu)/RaoQ_sd)) %>%
+  # Format for representation
+  select(theme, mini_theme,site,annee,SES_Rao) %>%
+  gather(Metric,value ,-theme, -mini_theme,-site,-annee) %>%
+  mutate(theme = factor(theme,levels=rev(c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments")), ordered=TRUE))
+
+```
+
+## Figure of the article
+
+### Figure 4a
+
+```{r}
+
+p <- ggplot(ses,aes(x = theme, y = value, fill = theme))
+p <- p + geom_hline(yintercept=0,col="black")
+p <- p + geom_violin(trim=TRUE,alpha=0.5) + geom_boxplot(width=0.1, fill="black",col="black")
+p <- p + stat_summary(fun.y=median, geom="point", shape=23, col="white", fill="white", size=3)
+p <- p + stat_summary(fun.y=median, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..), width = .1, col="white")
+p <- p + scale_fill_manual(values=rev(c("#440154FF","#31688EFF","#35B779FF","#f1a340")),name="Habitat") 
+p <- p + ylab(expression('SES'['RaoQ'])) + xlab("")
+p <- p +theme_light() + theme(strip.text.y=element_text(angle=0), strip.text = element_text(face="bold"), text=element_text(size=16), axis.text.x=element_blank(), legend.position="top")
+p <- p + scale_y_continuous(limits=c(-2.2,2.2))
+
+plot(p)
+```
+
+```{r, eval = FALSE}
+
+ggsave("SES_trialswap.svg", plot=p, device=svg, width = 15, height = 4)
+
+```
+
+### Figure 4b
+
+```{r, fig.width=20, fig.height=20}
+
+# Merge SES with the site coordinates
+map_ses <- coord %>%
+  right_join(., ses) %>%
+  mutate_if(is.character,as.factor) %>%
+  mutate(mini_theme = factor(mini_theme,levels=c("IM","HI","SM","MA"), ordered = T))
+
+# Map
+#----
+
+
+# Retrieve a map layer for France
+france_data <- map_data("france")
+names(france_data) <- c("X","Y","PID","POS","region","subregion")
+
+# Zoom on Brittany
+xlim <- c(-5.5,-1)
+ylim <- c(46.5,49.5)
+francemap <- clipPolys(france_data, xlim=xlim,ylim=ylim, keepExtra=TRUE)
+
+# Plot the map
+p <- ggplot(data=map_ses,mapping=aes(y=latitude,x=longitude,fill=value)) 
+p <- p + facet_wrap(mini_theme~annee, ncol=6, labeller = labeller(mini_theme = as_labeller(c( "MA" = "Subtidal maerl beds", "SM" = "Subtidal bare sediments", "HI" = "Intertidal seagrass beds", "IM" = "Intertidal bare sediments"), label_wrap_gen(20,multi_line=T))))
+p <- p + coord_map(xlim=xlim,ylim=ylim)
+p <- p + geom_polygon(data=france_data,aes(X,Y,group=PID),fill="gray90",col=NA,inherit.aes=F,show.legend=F) 
+p <- p + ylab("")+ xlab("")
+p <- p +scale_y_continuous(breaks=c(46.5,47,47.5,48,48.5,49,49.5,50), labels = c("46.5°N","47ºN","47.5°N", "48ºN","48.5°N", "49ºN","49.5°N","50°N")) 
+p <- p + scale_x_continuous(breaks=c(-6,-5,-4,-3,-2,-1,0), labels = c("6°W","5°W","4°W","3°W","2°W","1°W","0°")) 
+# Add points
+p <- p + geom_point(shape=21,size=4,alpha=1,stroke = 1,col="black")
+# Define the colour scale
+p <- p + scale_fill_gradient2(limits=c(-2,2), low = "#ca0020", mid = "#f7f7f7", high = "#0571b0", name=expression('SES'['RaoQ']))
+p <- p + theme_light() + theme(text = element_text(size=16),strip.text=element_text(face="bold",colour="black"),strip.text.y=element_text(angle=0))
+
+plot(p)
+
+```
+
+```{r, eval = FALSE}
+
+ggsave("Map_SES_trialswap.svg", plot=p, device=svg, width=15)
+
+```
+
+---
+
+# Figure 5
+
+## Included in the article
+
+```{r, fig.width=14, fig.height=7, eval = TRUE}
+
+# Hellinger transformation 
+com_trait_hell <- decostand(com_trait_estim,"hellinger") 
+
+# PCA computation
+com_trait_pca <- rda(com_trait_hell)
+
+# Axis 1 & 2 of the PCA
+p <- pca_ggplot(pca = com_trait_pca, metadata = id_pol, axes=c(1,2), goodness.axis = 2, goodness.tresh = 0.3, main.group = "theme", second.group = "method_echant", nudge.x = c(0.04, -0.08, 0.05, -0.17), nudge.y = c(-0.09, -0.12, 0.13, 0.15), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,22), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+```
+
+```{r, eval = FALSE}
+ggsave(file="PCA_trait_1_2.svg", plot=p, width=16, height=8)
+```
+
+## Not included in the article
+
+### Exploration of the other PCA axes
+
+```{r, fig.width=14, fig.height=7}
+
+# Screeplot of eigenvalues
+screeplot(com_trait_pca,bstick=T)
+
+# Axes 1 & 3 of the PCA
+pca_ggplot(pca = com_trait_pca, metadata = id_pol, axes=c(1,3), goodness.axis = 3, goodness.tresh = 0.4, main.group = "theme", second.group = "method_echant", nudge.x = c(-0.13, -0.08, 0.06, -0.17), nudge.y = c(-0.038, -0.14, 0.08, 0.15), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale = 6)
+
+# Axes 1 & 4 of the PCA
+pca_ggplot(pca = com_trait_pca, metadata = id_pol, axes=c(1,4), goodness.axis = 4, goodness.tresh = 0.5, main.group = "theme", second.group = "method_echant", nudge.x = c(-0.13, 0.15, 0.07, -0.13), nudge.y = c(-0.038, -0.07, 0.11, 0.11), scale.fill = c("#440154FF","#31688EFF","#35B779FF","#f1a340"), scale.shape = c(21,23), labels = c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), scale.col.labels= c("white","black"),print.sp.tresh = TRUE,ext_plot_scale=6)
+
+```
+
+---
+
+# Figure 6 and associated text
+
+## Coinertia of Figure 6
+
+```{r, fig.width = 15, fig.height = 15}
+
+# Coinertia and RV coefficent
+#-----------------------------
+
+# Hellinger transformation
+com_pol_hell <- decostand(com_pol,"hellinger") 
+
+com_trait_hell <- decostand(com_trait_estim,"hellinger") 
+
+# Compute the pcas
+dudi_sp <- dudi.pca(com_pol_hell, scale = FALSE, scannf = FALSE, nf = 5)
+dudi_trait <- dudi.pca(com_trait_hell, scale = FALSE, scannf = FALSE, nf = 5)
+
+# Compute the coinertia
+coin_glob <- coinertia(dudi_sp,dudi_trait, scannf = FALSE, nf=5)
+
+print(paste("The RV coefficient between the two ordinations is", round(coin_glob$R,2)))
+
+# Plot of Figure 6
+#-----------------
+
+# Extract the coordinates :
+
+# (1) of the sites in the trait space
+pos_site_trait <- coin_glob$mY %>%
+rownames_to_column("location") %>%
+separate(location, c("mini_theme", "site", "annee"), sep = "_") %>%
+select(mini_theme, site, annee, contains("S1"), contains("S2")) %>%
+rename("x" = "NorS1", "y" = "NorS2") %>%
+mutate(component = "Trait")
+
+# (2) of the sites in the taxonomic space
+pos_site_taxo <- coin_glob$mX %>%
+rownames_to_column("location") %>%
+separate(location, c("mini_theme", "site", "annee"), sep = "_")   %>%
+select(mini_theme, site, annee, contains("S1"), contains("S2")) %>%
+rename("x" = "NorS1", "y" = "NorS2") %>%
+mutate(component = "Taxonomy")
+
+# (3) of the trait modalities
+pos_mod_trait <- coin_glob$l1
+
+# Format the site coordinates
+coin_plot_data <- bind_rows(pos_site_trait, pos_site_taxo) %>%
+  full_join(id_pol, .) %>%
+  rename(habitat = theme) %>%
+  unite(sample, mini_theme, site, annee, remove = F) %>%
+  mutate(habitat = fct_rev(habitat))
+
+# COmpute the group centroids
+cent_group <- coin_plot_data %>%
+  group_by(habitat,component) %>%
+  summarise(x=mean(x),y=mean(y)) %>%
+  unite(label, habitat, component, sep=" | ",remove=FALSE)
+
+
+coin_plot_data_background <- coin_plot_data %>%
+  rename(habitat_2 = habitat)
+
+
+p <- ggplot(coin_plot_data, aes(x = x, y = y, col = habitat, shape = component))
+p <- p + geom_point(data=coin_plot_data_background, aes(x=x,y=y, col=habitat_2), shape=16,inherit.aes = FALSE, alpha = 0.4, size=0.8)
+p <- p + stat_chull(aes(fill=habitat,linetype=component), alpha=0.15, geom = "polygon")
+p <- p + geom_point(data=cent_group, aes(x = x, y = y,fill=habitat),col="black", size=3, alpha= 0.7)
+p <- p + geom_path(aes(group = habitat),alpha=0.3)
+p <- p + facet_wrap(~habitat,ncol=2)
+p <- p + scale_shape_manual(values = c(21, 24), name = "Centroid")
+p <- p + scale_colour_manual( values = rev(c("#440154FF", "#31688EFF", "#35B779FF", "#f1a340")), guide = FALSE)
+p <- p + scale_fill_manual( values = rev(c("#440154FF", "#31688EFF", "#35B779FF", "#f1a340")), guide = TRUE, name="Habitat")
+p <- p + scale_linetype_manual(values=c(1,2), name="Convex hull")
+p <- p + guides(fill = guide_legend(override.aes = list(shape=NA, alpha=0.7)),linetype = guide_legend(override.aes = list(colour="black"), nrow=1), shape = guide_legend(override.aes = list(fill="grey")))
+p_coin <- p + theme_bw() + theme(strip.text.x = element_text(face="bold"),text = element_text(size = 16)) + xlab("Coinertia 1") + ylab("Coinertia 2")
+
+plot(p_coin)
+
+```
+
+```{r, eval = FALSE}
+ggsave("coinertia.svg", plot = p_coin, dpi = 600)
+```
+
+## RV coefficients per habitat (in the text of the article)
+
+```{r}
+
+# Intertidal bare sediments
+#------------------
+
+# Select the data
+com_tot_IM <- com_tot[str_detect(rownames(com_pol),"IM"),] %>%
+  select(which(colSums(.)>0))
+com_trait_IM <-  com_trait_estim[str_detect(rownames(com_trait_estim),"IM"),]
+
+# Compute the PCAs
+com_pol_IM_hell <- decostand(com_tot_IM,"hellinger") 
+com_trait_IM_hell <- decostand(com_trait_IM,"hellinger") 
+
+dudi_sp_IM <- dudi.pca(com_pol_IM_hell, scale = FALSE, scannf = FALSE, nf = 5)
+dudi_trait_IM <- dudi.pca(com_trait_IM_hell, scale = FALSE, scannf = FALSE, nf = 5)
+
+# Coinertia
+coin_IM <- coinertia(dudi_sp_IM,dudi_trait_IM, scannf = FALSE, nf=5)
+
+print(paste("The RV coefficient within intertidal bare sediment is of",round(coin_IM$RV,2)))
+
+# Intertidal seagrass beds
+#-------------------------
+
+# Select the data
+com_tot_HI <- com_tot[str_detect(rownames(com_pol),"HI"),] %>%
+  select(which(colSums(.)>0))
+com_trait_HI <-  com_trait_estim[str_detect(rownames(com_trait_estim),"HI"),]
+
+# Compute the PCAs
+com_pol_HI_hell <- decostand(com_tot_HI,"hellinger") 
+com_trait_HI_hell <- decostand(com_trait_HI,"hellinger") 
+
+dudi_sp_HI <- dudi.pca(com_pol_HI_hell, scale = FALSE, scannf = FALSE, nf = 5)
+dudi_trait_HI <- dudi.pca(com_trait_HI_hell, scale = FALSE, scannf = FALSE, nf = 5)
+
+# Coinertia
+coin_HI <- coinertia(dudi_sp_HI,dudi_trait_HI, scannf = FALSE, nf=5)
+
+print(paste("The RV coefficient within intertidal seagrass beds is of",round(coin_HI$RV,2)))
+
+# Subtidal bare sediments
+#-------------------------
+
+# Select the data
+com_tot_SM <- com_tot[str_detect(rownames(com_pol),"SM"),] %>%
+  select(which(colSums(.)>0))
+com_trait_SM <-  com_trait_estim[str_detect(rownames(com_trait_estim),"SM"),]
+
+# Compute the PCAs
+com_pol_SM_hell <- decostand(com_tot_SM,"hellinger") 
+com_trait_SM_hell <- decostand(com_trait_SM,"hellinger") 
+
+dudi_sp_SM <- dudi.pca(com_pol_SM_hell, scale = FALSE, scannf = FALSE, nf = 5)
+dudi_trait_SM <- dudi.pca(com_trait_SM_hell, scale = FALSE, scannf = FALSE, nf = 5)
+
+# Coinertia
+coin_SM <- coinertia(dudi_sp_SM,dudi_trait_SM, scannf = FALSE, nf=5)
+
+print(paste("The RV coefficient within subtidal bare sediment is of",round(coin_SM$RV,2)))
+
+# Subtidal maerl beds
+#-------------------------
+
+# Select the data
+com_tot_MA <- com_tot[str_detect(rownames(com_pol),"MA"),] %>%
+  select(which(colSums(.)>0))
+com_trait_MA <-  com_trait_estim[str_detect(rownames(com_trait_estim),"MA"),]
+
+# Compute the PCAs
+com_pol_MA_hell <- decostand(com_tot_MA,"hellinger") 
+com_trait_MA_hell <- decostand(com_trait_MA,"hellinger") 
+
+dudi_sp_MA <- dudi.pca(com_pol_MA_hell, scale = FALSE, scannf = FALSE, nf = 5)
+dudi_trait_MA <- dudi.pca(com_trait_MA_hell, scale = FALSE, scannf = FALSE, nf = 5)
+
+# Coinertia
+coin_MA <- coinertia(dudi_sp_MA,dudi_trait_MA, scannf = FALSE, nf=5)
+
+print(paste("The RV coefficient within subtidal maerl beds is of",round(coin_MA$RV,2)))
+
+
+```
+
+---
+
+# Table 1
+
+```{r}
+
+trait_list %>%
+  select(-Type) %>%
+  rename(Abbreviations = Accronyme) %>%
+  kable("html") %>%
+  collapse_rows(.) %>%
+  kable_styling("striped", full_width = F, position="left")
+
+```
+
+---
+
+# Table 2
+
+## Computation
+
+### BDtot
+
+```{r}
+
+# Select the transformation used to compute BDtot
+method <- "hellinger"
+
+# Initialisation
+BDtot <- NULL
+
+for(i in unique(id_pol$theme)){
+  
+  # Compute the BDtot
+  #----------------
+  
+  # Select the samples and remove the empty spacies
+  tmp <- com_pol[id_pol$theme == i,] %>%
+    select(names(which(colSums(.)>0)))
+
+  # Taxonomic BDtot
+  bd_taxo <- beta.div(tmp, method= method, nperm=1)
+  bd_taxo <- bd_taxo$beta[2]
+  
+  # Functional BDtot
+  tmp <- com_trait_estim[id_pol$theme ==i,]
+  
+  # BD trait
+  bd_func <- beta.div(tmp, method= method, nperm=1)
+  bd_func <- bd_func$beta[2]
+  
+  # Save
+  #----------------
+  
+  BDtot <- bind_rows(BDtot,
+  data.frame(theme= i,component="Taxonomic", BDtot=bd_taxo),
+  data.frame(theme= i,component="Functional", BDtot=bd_func))
+  
+}
+
+# Format the output
+BDtot <- BDtot %>%
+  mutate(BDtot = round(BDtot,2)) %>%
+  gather(metric, value, -theme, -component) %>%
+  unite(metric, c("component", "metric")) %>%
+  spread(metric,value) %>%
+  select(theme, "Taxonomic BDtot" = Taxonomic_BDtot, "Functional BDtot" = Functional_BDtot)
+
+```
+
+### Trait space occupancy
+
+The Euclidean distance was used to compute the trait space to be coherent with the method used to compute the functional indices for Figure 3
+
+Here,we computed the trait space using a PCoA. This choice was originally done to compare the results presented in the article (obtained from the Euclidean distance on the imputed trait matrix) with those obtained from the square-root of Gower distance on the raw trait matrix (Gower distance is classically used to handle NAs, and was square-rooted to make it fully embeddable into Euclidean space and avoid negative eigenvalues in the PCoA;see p.297 of Legendre and Legendre 2012). However, given that we used the Euclidean distance, note that our approach is fairly equivalent to a PCA computed on the imputed trait matrix. The alternative approach with the Gower distance yielded similar results
+
+> Note that there is a typo in the legend of Table 2, as it says "trait space was measured based on the first 6 axes of the **PCA** of the species‐by‐trait matrix" instead of "trait space was measured based on the first 6 axes of the **PCoA** of the species‐by‐trait matrix"
+
+```{r}
+
+# We compute a PCoA using the Euclidean distance matrix computed earlier on the imputed species traits and compute a PCoA 
+sp_pcoa <- pcoa(trait_euclidist, correction = "none")
+
+```
+
+- **How many axes should we keep ?** (For computation efficiency, we cannot keep all axes otherwise the computation of the volume is fairly demanding)
+
+```{r, echo = F}
+eigenval <- sp_pcoa$values %>%
+  mutate(Axe = factor(paste("PCOA",rownames(.)),levels=paste("PCOA",rownames(.)),ordered=T))
+
+p1 <- ggplot(eigenval,aes(x=Axe, y=Relative_eig)) + geom_bar(stat="identity")
+p1 <- p1 + geom_point(aes(y=Broken_stick), col="red")
+p1 <- p1 + annotate(geom = "point", x = 15, y = 0.2, colour = "red", size = 2)
+p1 <- p1 + annotate(geom = "text", label = "Expected value from broken sticks", x = 15.5, y=0.2, hjust = "left")
+p1 <- p1 + theme(axis.text.x=element_text(size = 8, angle = 45, hjust = 1),text=element_text(size=14)) + ylab("Relative Eigenvalues") + xlab("")
+
+p2 <- ggplot(eigenval,aes(x=Axe, y=Cumul_eig)) + geom_bar(stat="identity")
+p2 <- p2 + geom_point(aes(y=Cumul_br_stick), col="red")
+p2 <- p2 + theme(axis.text.x=element_text(size = 8, angle = 45, hjust = 1),text=element_text(size=14)) + ylab("Cumulative Eigenvalues") + xlab("Axes")
+
+grid.arrange(p1,p2)
+
+```
+
+> We kept the 6 axes that had eigenvalues superior (or close for the 6th one) to those expected from brocken sticks. These 6 axes represented `r round(eigenval$Cumul_eig[6] * 100,2)` % of the intial variance of the species-by-trait matrix.
+
+- **Computation of the volume of the regional trait space** (formed by all the species found in the survey)
+
+```{r, echo=T}
+
+# Select the axes
+axes_sel <- sp_pcoa$vectors[,1:6]
+
+# Computation of the volume of the regional trait space (formed by all the species found in this survey)
+trait_space_reg <- convhulln(axes_sel, options = "FA")
+
+```
+
+- **Computation of the volume of the trait space of each habitat** (formed by all the species found in these habitat across the survey)
+
+```{r, echo=T}
+
+trait_space_hab <- NULL
+
+# Loop on the habitats
+for(i in unique(id_pol$theme)){
+  
+  # Select the species found in this habitat
+  sp_hab <- com_pol %>%
+    filter(id_pol$theme == i) %>%
+    select(which(colSums(.) > 0)) %>%
+    colnames(.)
+  
+  # Extract the coordinates of these species in the PCoA
+  coord_sel <- axes_sel[sp_hab,]
+  
+  # Compute the volume of the corresponding trait space
+  tmp <- convhulln(coord_sel, options = "FA")
+  
+  # Format
+  tmp <- data.frame(theme=i, volume=tmp$vol)
+  
+  # Save
+  trait_space_hab <- rbind(trait_space_hab,tmp)
+  
+}
+
+# Compute the relative proportion of these habitat trait space with respect to the regional trait space
+trait_space_hab$vol.rel <- round((trait_space_hab$volume / trait_space_reg$vol) * 100,2)
+
+trait_space_hab <- trait_space_hab %>%
+  select(theme, "Total occupancy of regional trait space (%)" = vol.rel)
+
+```
+
+- **Computation of the mean volume of the trait spaces of the assemblages of each habitat** (space formed by the species found in each assemblage, and then average per habitat)
+
+Given that we chose to keep 6 axes to accurately depict the functional trait space, we cannot compute the convex hulls for the assemblages with less than 7 species. Therefore, we removed the assemblages with less than 7 species from this analysis. See below for a sensitivity analysis of the results of Table 2 to this choice as well as for the identity of the samples removed (most of them belonging to intertidal bare sediments).
+
+The code used to compute the results found in Table 2 (based on 6 PCoA axes for all assemblages with more than 7 species) is :
+
+```{r, echo=T}
+
+trait_space_site <- NULL
+
+# Loop on the assemblages
+for(i in 1:nrow(com_pol)){
+  
+  # Select the species in the assemblage
+  sp_sel <- com_pol[i,] %>%
+    select(names(which(colSums(.)>0))) %>%
+    colnames(.)
+  
+  # We cannot compute the volume if there are less than 7 species in the community
+  if(length(sp_sel) < 7){
+    
+    # If there are less species, we put a NA
+    tmp <- data.frame(Samples = rownames(com_tot[i,]), volume=NA)
+    
+  }else{# If there are more
+    
+    # Extract the species coordinates in the trait space
+    coord_sel <- axes_sel[sp_sel,]
+  
+    # Compute the volume
+    tmp <- convhulln(coord_sel, options = "FA")
+    
+    # Format
+    tmp <- data.frame(Samples = rownames(com_tot[i,]), volume=tmp$vol)
+  }
+  
+  # Save
+  trait_space_site <- rbind(trait_space_site,tmp)
+
+}
+
+# Compute the relative volume with respect to the regional trait space
+trait_space_site$vol.rel <- (trait_space_site$volume / trait_space_reg$vol) * 100
+
+# Compute mean and sd per habitat
+trait_space_site <- trait_space_site %>%
+  # Recreate the samples id
+  mutate(mini_theme=sapply(str_split(.$Samples,"_"),'[[',1,simplify=T), site=sapply(str_split(.$Samples,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$Samples,"_"),'[[',3,simplify=T)) %>%
+  # Joint the metadata
+  right_join(id_pol,.) %>%
+  # Compute the mean and sd
+  group_by(theme) %>%
+  summarise(vol.rel.mean = round(mean(vol.rel, na.rm=T),2), vol.rel.sd = round(sd(vol.rel,na.rm=T),2)) %>%
+  ungroup() %>%
+  unite("Average occupancy of regional trait space (%) ± SD", c(vol.rel.mean, vol.rel.sd), sep = " ± ")
+
+```
+
+### Regional richness contribution 
+
+```{r}
+
+# Get the list of the species occuring in the samples
+occuring_sp <- faune_pol %>%
+  gather(species,abundance,-theme,-mini_theme,-site,-method_echant,-annee) %>%
+  filter(abundance > 0)
+
+# Total contribution of the habitat to the regional species pool
+total_rich_contrib <- occuring_sp %>%
+  # Compute the richness of each habitat
+  group_by(theme) %>%
+  summarise(rich = n_distinct(species)) %>%
+  ungroup() %>%
+  # Compute the overall richness in the dataset
+  mutate(reg_rich=length(unique(occuring_sp$species))) %>%
+  # Compute the proportion
+  mutate(prop = round((rich/reg_rich)*100,2)) %>%
+  select(theme, "Total contribution to regional taxonomic richness (%)" = prop)
+
+# Mean (and sd) contribution of the assemblages of each habitat to the regional species pool
+mean_rich_contrib <- occuring_sp %>%
+  # Compute the richness of each assemblages in each habitat
+  group_by(theme,site,annee) %>%
+  summarise(rich = n_distinct(species)) %>%
+  ungroup() %>%
+  # Compute the overall richness in the dataset
+  mutate(reg_rich=length(unique(occuring_sp$species))) %>%
+  # Compute the proportion
+  mutate(prop = (rich/reg_rich)*100) %>%
+  # Compute the mean and sd per habitat
+  group_by(theme) %>%
+  summarise(mean_prop = round(mean(prop),2), sd_prop= round(sd(prop),2)) %>%
+  ungroup() %>%
+  unite("Average contribution to regional taxonomic richness (%) ± SD", c(mean_prop, sd_prop), sep = " ± ")
+```
+
+
+## Table of the article
+
+```{r}
+
+left_join(BDtot,trait_space_hab) %>%
+  left_join(.,trait_space_site) %>%
+  left_join(., total_rich_contrib) %>%
+  left_join(., mean_rich_contrib) %>%
+  rename(Habitat = theme) %>%
+  arrange(Habitat) %>%
+  kable("html") %>%
+  kable_styling("striped", full_width = F, position="left")
+
+```
+
+
+> Note that there is an error in the printed version of the article: the 6th column of Table 2 should be named "Total contribution to regional taxonomic richness (%)" instead of "Total contribution to regional taxonomic richness (%) **± SD**". It is indeed the total contribution of the habitat, which is a unique value. Standard deviation was only used when measuring the individual contribution of the assemblages of each habitat (values that are found in the 7th and last column of Table 2).
+
+## Not included in the article
+
+### Sensitivity analysis of trait space occupancy
+
+Given that we chose to keep 6 axes to accurately depict the functional trait space, we removed the assemblages with less than 7 species for which we could not compute the convex hulls.
+
+Most of the assemblages removed belonged to intertidal bare sediments :
+
+```{r}
+
+# Get the occurrences of the species
+com_pol_pa <- com_pol 
+com_pol_pa[com_pol_pa>0] <- 1
+
+# Id of the samples removed
+rowSums(com_pol_pa[rowSums(com_pol_pa)<7,]) %>% 
+  as.data.frame() %>%
+  rename("Number of species" = ".") %>%
+  rownames_to_column("Assemblages removed") %>%
+  arrange(`Number of species`) %>%
+  kable("html") %>%
+  kable_styling(full_width=F)
+```
+
+However, to see if we missed something by removing these assemblages, we computed the volume occupied by these assemblages based on a reduced set of coordinates (using as many axes as possible, e.g. based on 4 PCoA axes for an assemblage with 5 species). Note that these estimated volumes are less precise that those reported for the assemblages with at least 7 species, as the reduced set of PCoA axes does not fully represent the functional space anymore (remember that the 6 PCoA axes already represent less than 80% of the original variance). Furthermore, this only possible for assemblages with at least 3 species, otherwise we cannot compute a volume.
+
+The results (below) suggest the results reported in Table 2 (for intertidal bare sediment especially) are robust to this choice of removing the assemblages with less than 7 species.
+
+```{r}
+
+trait_space_site <- NULL
+
+# Loop on the assemblages
+for(i in 1:nrow(com_pol)){
+  
+  
+  # Select the species in the assemblage
+  sp_sel <- com_pol[i,] %>%
+    select(names(which(colSums(.)>0))) %>%
+    colnames(.)
+  
+  # Number of axes to consider: the min value between 6 and the n_species-1
+  n_axes <- min(6,length(sp_sel)-1)
+  
+  # Extract their coordinates for the number of axes that will allow computation of the convexhull
+  coord_sel <- axes_sel[sp_sel,1:n_axes]
+  
+  # Compute the trait space for the assemblage
+  try(
+    
+  {vol_assembl <- convhulln(coord_sel, options = "FA")
+  
+  # COmpute the regional trait space on the same number of axes
+  trait_space_reg <- convhulln(axes_sel[,1:n_axes], options = "FA")
+  
+  tmp <- data.frame(Samples = rownames(com_pol[i,]), volume_assemblage=vol_assembl$vol, volume_reg = trait_space_reg$vol, n_axes = n_axes)
+
+  # Enregistrement
+  trait_space_site <- rbind(trait_space_site,tmp)
+  }, TRUE)
+
+}
+
+# Any errors ?
+#-------------
+
+print(paste("There are", nrow(com_pol), "assemblages. We were able to compute the convex hulls for", nrow(trait_space_site), "of them.", nrow(com_pol) - nrow(trait_space_site), "returned an error and could not be computed"))
+
+# Samples that could not be computed at all, even with the "as many axes as possible'-approach
+conver_error <- rownames(com_pol)[!rownames(com_pol) %in% trait_space_site$Samples]
+
+# Id and richness of the samples that did not worked
+rowSums(com_pol_pa[conver_error,]) %>% 
+  as.data.frame() %>%
+  rename("Number of species" = ".") %>%
+  rownames_to_column("Assemblages that did not worked at all") %>%
+  arrange(`Number of species`) %>%
+  kable("html") %>%
+  kable_styling(full_width=F)
+
+
+# Assemblages for which we used less than 6 axes
+#-----------------------------------------------
+
+trait_space_site %>%
+  filter(n_axes < 6) %>%
+  mutate("Percentage occupancy of regional trait space" = round(volume_assemblage / volume_reg * 100,2))  %>%
+  select("Assemblages with less than 7 species" = Samples, `Percentage occupancy of regional trait space`, "Number of axes kept for computation"=n_axes) %>%
+  arrange(`Number of axes kept for computation`) %>%
+  kable("html") %>%
+  kable_styling(full_width=F)
+
+# Mean and sd if we had included these assemblages
+#-----------------------------------------------
+
+trait_space_site %>%
+  # On recréer les colonnes d'identification
+  mutate(mini_theme=sapply(str_split(.$Samples,"_"),'[[',1,simplify=T), site=sapply(str_split(.$Samples,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$Samples,"_"),'[[',3,simplify=T)) %>%
+  # On joint les identifiants des échantillons 
+  right_join(id_pol,.) %>%
+  mutate(vol.rel = volume_assemblage / volume_reg * 100) %>%
+  group_by(theme) %>%
+  summarise(vol.rel.mean = mean(vol.rel, na.rm=T), vol.rel.sd = sd(vol.rel,na.rm=T), n_axes_mean = mean(n_axes)) %>%
+  rename(Habitat = theme, "Average occupancy of regional trait space (%)" = vol.rel.mean, "SD" = vol.rel.mean, "Mean number of axes used"=n_axes_mean) %>%
+  arrange(desc(Habitat)) %>%
+  kable("html") %>%
+  kable_styling(full_width=F)
+```
+
+### Sensitivity of BDtot to alternative transformations
+
+- **Hellinger**
+
+```{r BDtot_hab_hellinger, echo = FALSE}
+
+# Method
+method <- "hellinger"
+
+# Initialisation
+BDtot <- NULL
+
+for(i in unique(id_pol$theme)){
+  
+  # Compute the BDtot
+  #----------------
+  
+  # Select the samples and remove the empty spacies
+  tmp <- com_pol[id_pol$theme == i,] %>%
+    select(names(which(colSums(.)>0)))
+
+  # Taxonomic BDtot
+  bd_taxo <- beta.div(tmp, method= method, nperm=1)
+  bd_taxo <- bd_taxo$beta[2]
+  
+  # Functional BDtot
+  tmp <- com_trait_estim[id_pol$theme ==i,]
+  
+  # BD trait
+  bd_func <- beta.div(tmp, method= method, nperm=1)
+  bd_func <- bd_func$beta[2]
+  
+  # Save
+  #----------------
+  
+  BDtot <- bind_rows(BDtot,
+  data.frame(theme= i,component="Taxonomic", BDtot=bd_taxo),
+  data.frame(theme= i,component="Functional", BDtot=bd_func))
+  
+}
+
+BDtot <- id_pol %>%
+  distinct(theme,mini_theme, method_echant) %>%
+  left_join(.,BDtot) %>%
+  mutate(tidal_level=recode(method_echant,"Benne"="Subtidal","Carotte"="Intertidal"))
+
+p <- ggplot(BDtot, aes(x=theme,y=BDtot, fill=theme))
+p <- p + facet_grid(~component)
+p <- p + geom_path(aes(group=tidal_level))
+p <- p + geom_point(shape=21, size=4)
+p <- p + geom_text_repel(aes(label= round(BDtot,2)), point.padding = 0.35, nudge_x = 0.3)
+p <- p + scale_fill_viridis_d(direction = -1,name = "Habitat")
+p <- p + guides(fill=guide_legend(title="Habitat"))
+p <- p + theme_light() + xlab("") + theme(text=element_text(size=14), axis.text.x = element_blank(), axis.ticks.x = element_blank(),strip.text=element_text(face="bold",colour="black"))
+
+plot(p)
+
+```
+
+- **Chord**
+
+```{r BDtot_hab_chord, echo = FALSE}
+
+# Method
+method <- "chord"
+
+# Initialisation
+BDtot <- NULL
+
+for(i in unique(id_pol$theme)){
+  
+  # Compute the BDtot
+  #----------------
+  
+  # Select the samples and remove the empty spacies
+  tmp <- com_pol[id_pol$theme == i,] %>%
+    select(names(which(colSums(.)>0)))
+
+  # Taxonomic BDtot
+  bd_taxo <- beta.div(tmp, method= method, nperm=1)
+  bd_taxo <- bd_taxo$beta[2]
+  
+  # Functional BDtot
+  tmp <- com_trait_estim[id_pol$theme ==i,]
+  
+  # BD trait
+  bd_func <- beta.div(tmp, method= method, nperm=1)
+  bd_func <- bd_func$beta[2]
+  
+  # Save
+  #----------------
+  
+  BDtot <- bind_rows(BDtot,
+  data.frame(theme= i,component="Taxonomic", BDtot=bd_taxo),
+  data.frame(theme= i,component="Functional", BDtot=bd_func))
+  
+}
+
+BDtot <- id_pol %>%
+  distinct(theme,mini_theme, method_echant) %>%
+  left_join(.,BDtot) %>%
+  mutate(tidal_level=recode(method_echant,"Benne"="Subtidal","Carotte"="Intertidal"))
+
+p <- ggplot(BDtot, aes(x=theme,y=BDtot, fill=theme))
+p <- p + facet_grid(~component)
+p <- p + geom_path(aes(group=tidal_level))
+p <- p + geom_point(shape=21, size=4)
+p <- p + geom_text_repel(aes(label= round(BDtot,2)), point.padding = 0.35, nudge_x = 0.3)
+p <- p + scale_fill_viridis_d(direction = -1,name = "Habitat")
+p <- p + guides(fill=guide_legend(title="Habitat"))
+p <- p + theme_light() + xlab("") + theme(text=element_text(size=14), axis.text.x = element_blank(), axis.ticks.x = element_blank(),strip.text=element_text(face="bold",colour="black"))
+
+plot(p)
+
+```
+
+- **Log.chord**
+
+```{r BDtot_hab_logchord, echo = FALSE}
+
+# Method
+method <- "log.chord"
+
+# Initialisation
+BDtot <- NULL
+
+for(i in unique(id_pol$theme)){
+  
+  # Compute the BDtot
+  #----------------
+  
+  # Select the samples and remove the empty spacies
+  tmp <- com_pol[id_pol$theme == i,] %>%
+    select(names(which(colSums(.)>0)))
+
+  # Taxonomic BDtot
+  bd_taxo <- beta.div(tmp, method= method, nperm=1)
+  bd_taxo <- bd_taxo$beta[2]
+  
+  # Functional BDtot
+  tmp <- com_trait_estim[id_pol$theme ==i,]
+  
+  # BD trait
+  bd_func <- beta.div(tmp, method= method, nperm=1)
+  bd_func <- bd_func$beta[2]
+  
+  # Save
+  #----------------
+  
+  BDtot <- bind_rows(BDtot,
+  data.frame(theme= i,component="Taxonomic", BDtot=bd_taxo),
+  data.frame(theme= i,component="Functional", BDtot=bd_func))
+  
+}
+
+BDtot <- id_pol %>%
+  distinct(theme,mini_theme, method_echant) %>%
+  left_join(.,BDtot) %>%
+  mutate(tidal_level=recode(method_echant,"Benne"="Subtidal","Carotte"="Intertidal"))
+
+p <- ggplot(BDtot, aes(x=theme,y=BDtot, fill=theme))
+p <- p + facet_grid(~component)
+p <- p + geom_path(aes(group=tidal_level))
+p <- p + geom_point(shape=21, size=4)
+p <- p + geom_text_repel(aes(label= round(BDtot,2)), point.padding = 0.35, nudge_x = 0.3)
+p <- p + scale_fill_viridis_d(direction = -1,name = "Habitat")
+p <- p + guides(fill=guide_legend(title="Habitat"))
+p <- p + theme_light() + xlab("") + theme(text=element_text(size=14), axis.text.x = element_blank(), axis.ticks.x = element_blank(),strip.text=element_text(face="bold",colour="black"))
+
+plot(p)
+
+```
+
+---
+
+# Figure S1
+
+Figure S1 was combined on Inkscape with the following R outputs
+
+## Map of the sites
+
+```{r, eval = T}
+
+# Map
+#------
+
+# Retrieve a map layer for France
+france_data <- map_data("france")
+names(france_data) <- c("X","Y","PID","POS","region","subregion")
+
+# Zoom on Brittany
+xlim <- c(-5.5,-1)
+ylim <- c(46.5,49.5)
+francemap <- clipPolys(france_data, xlim=xlim,ylim=ylim, keepExtra=TRUE)
+
+p <- ggplot(data=map_coord,mapping=aes(y=latitude,x=longitude,fill=theme)) 
+p <- p + coord_map(xlim=xlim,ylim=ylim)
+p <- p + geom_polygon(data=france_data,aes(X,Y,group=PID),fill="gray85",inherit.aes=F,show.legend=F) 
+p <- p + geom_path(data=france_data,aes(X,Y,group=PID),inherit.aes=F,show.legend=F, col="gray85") 
+p <- p + ylab("")+ xlab("")
+p <- p +scale_y_continuous(breaks=c(46.5,47,47.5,48,48.5,49,49.5,50), labels = c("46.5°N","47ºN","47.5°N", "48ºN","48.5°N", "49ºN","49.5°N","50°N")) 
+p <- p + scale_x_continuous(breaks=c(-6,-5,-4,-3,-2,-1,0), labels = c("6°W","5°W","4°W","3°W","2°W","1°W","0°")) 
+# Add the points
+p <- p + geom_point(shape=21,size=4,alpha=0.5,col="black")
+# Contour without transparency
+p <- p + geom_point(aes(y=latitude,x=longitude),inherit.aes=F,shape=21,size=4,fill=alpha("white",0),col="black")
+# Color for the habitats
+p <- p + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"),name="Habitat")
+p <- p + theme_map() + theme(axis.ticks=element_line(colour="gray45"),axis.text=element_text(colour="gray45"),panel.background = element_rect(fill="aliceblue"), legend.position="none")
+p <- p + guides(fill=guide_legend(override.aes=list(size=15,shape=22)))
+
+p <- p +  geom_text_repel(aes(y=latitude,x=longitude,label = site_number),inherit.aes=F, size= 3, point.padding=unit(0.6, "lines"),segment.size	= 0.5,show.legend=F)
+
+# Add the scale
+map <- p + scalebar(data=map_coord,dist=50,dist_unit="km",st.bottom=F,st.size=4,transform=TRUE,model="WGS84",anchor=c(x=-4,y=46.6))
+
+plot(map)
+
+```
+
+## Number of samples available per site/year 
+
+```{r, fig.width=25, fig.height=20, eval = T}
+
+# Create a df with the missing samples
+missing <- data.frame(theme="Intertidal bare sediments",site=c("Rade de Brest","Plage de l'Aber"),annee="2010",method_echant="Carotte",n_rep=0,Available=FALSE)
+
+# Retrieve the number of samples available for the remaining sampling occasions
+tmp  <- faune_sel %>%
+  distinct(theme, site,point_name, annee, method_echant,replicat) %>%
+  # Remove the maerl of Keraliou
+  filter(site!="Rade de Brest - Keraliou") %>%
+  # Rename the sites
+  mutate(site=recode(site,"Saint-Brieuc"="Baie de Saint-Brieuc")) %>%
+  mutate(site=ifelse(site=="Baie de Saint-Brieuc" & theme=="Bancs de Maërl","Arcouest",site)) %>%
+  # Summarise the number of replicates per sampling occasion
+  group_by(theme, site, annee, method_echant) %>%
+  dplyr::summarise(n_rep=n()) %>%
+  ungroup() %>%
+  # Define the availability of data
+  mutate(Available=TRUE) %>%
+  # Add the missing samples
+  bind_rows(.,missing) %>%
+  # Rename and reorder the factors
+  mutate(theme=recode(theme, "Bancs de Maërl" = "Subtidal maerl beds", "Subtidal Meuble" = "Subtidal bare sediments", "Herbiers Intertidaux" = "Intertidal seagrass beds", "Intertidal Meuble" = "Intertidal bare sediments")) %>%
+  mutate(theme = factor(theme,levels=c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), ordered=TRUE)) %>%
+  mutate(site=factor(site,levels=c("Baie du Mont Saint-Michel","Saint-Benoit","Saint-Malo","Saint-Briac","Saint-Cast","Baie de Saint-Brieuc","Arcouest","Sept-Iles","Lannion","Saint-Efflam","Pierre Noire","Morlaix","Callot","Sainte-Marguerite","Molene","Blancs Sablons","Iroise","Camaret","Roscanvel","Rade de Brest",
+"Rade de Brest - Rozegat","Rade de Brest - Larmor","Baie de Douarnenez Nord","Plage de l'Aber","Baie de Douarnenez Sud","Audierne","Glenan","Concarneau","Trevignon","Gavres","Erdeven","Lorient Etel","Plouharnel","Quiberon","Belle-ile","Meaban","Kerjouanno","Arradon","Vilaine Large Sud","Vilaine Large Nord","Vilaine Cote","Damgan"),ordered=T)) %>%
+  mutate(site_number=as.numeric(site)) %>%
+  arrange(site_number) %>%
+  mutate(num_site=factor(paste(site_number,site,sep=" - "),levels=rev(unique(paste(site_number,site,sep=" - "))),ordered=TRUE))
+
+# Plot
+p <- ggplot(aes(x=annee,y=num_site,fill=theme,shape=Available),data=tmp)
+p <- p + geom_point(size=12,alpha=0.5)
+# Add the number of samples
+p <- p + geom_text(aes(x=annee,y=num_site,label=n_rep),size = 7.5,fontface="bold",show.legend=FALSE)
+p <- p + facet_wrap(~theme,ncol=4,labeller=label_wrap_gen(width = 10, multi_line = TRUE))
+p <- p + theme_light()
+p <- p + labs(y='')
+p <- p + scale_shape_manual(values=c(0,22),labels=c("None","# available"), name="Availability")
+p <- p + scale_x_discrete(name="Years",drop=FALSE)
+p <- p + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"),name="Habitat")
+p <- p + theme(strip.text.x = element_text(face="bold", colour="black"),axis.text.x=element_text(angle=90), text = element_text(size = 32))
+dispo <- p + guides(fill = guide_legend(override.aes = list(label=FALSE,shape=22),ncol = 2,order = 1), shape=guide_legend(override.aes=list(shape=c(22,22),fill=c("white","#f1a340")),order = 2))
+
+plot(dispo)
+
+```
+
+---
+
+# Figure S3
+
+```{r}
+
+# Transformation hellinger
+com_pol_hell <- decostand(com_pol,"hellinger") 
+
+# Calcul de l'ACP
+com_pol_pca <- rda(com_pol_hell)
+
+# On récupère les coordonnées des sites
+site_scores <- scores(com_pol_pca,display="sites", scaling = 1) %>%
+  as.data.frame() %>%
+  rownames_to_column("location") %>%
+  separate(location,c("mini_theme","site","annee"),sep="_") %>%
+  right_join(id_pol,.) %>% 
+  mutate(annee = as.numeric(annee)) %>%
+  mutate(tidal = recode(method_echant, "Benne" = "Subtidal", "Carotte" = "Intertidal")) %>%
+  mutate(tidal = factor(tidal, levels= c("Intertidal", "Subtidal"), ordered = T)) %>%
+  # On rassemble les sites de la Rade et de Morlaix, ainsi qu'on modifie ceux de Saint-brieuc
+  mutate(site=recode(site,"Saint-Brieuc"="Baie de Saint-Brieuc")) %>%
+  mutate(site=ifelse(site=="Baie de Saint-Brieuc" & theme=="Bancs de Maërl","Arcouest",site)) %>%
+  # On réordonne le facteur theme et metric pour la représentation
+  mutate(theme = factor(theme,levels=c("Subtidal maerl beds","Subtidal bare sediments","Intertidal seagrass beds","Intertidal bare sediments"), ordered=TRUE)) %>%
+  mutate(site=factor(site,levels=c("Baie du Mont Saint-Michel","Saint-Benoit","Saint-Malo","Saint-Briac","Saint-Cast","Baie de Saint-Brieuc","Arcouest","Sept-Iles","Lannion","Saint-Efflam","Pierre Noire","Morlaix","Callot","Sainte-Marguerite","Molene","Blancs Sablons","Iroise","Camaret","Roscanvel","Rade de Brest",
+"Rade de Brest - Rozegat","Rade de Brest - Larmor","Baie de Douarnenez Nord","Plage de l'Aber","Baie de Douarnenez Sud","Audierne","Glenan","Concarneau","Trevignon","Gavres","Erdeven","Lorient Etel","Plouharnel","Quiberon","Belle-ile","Meaban","Kerjouanno","Arradon","Vilaine Large Sud","Vilaine Large Nord","Vilaine Cote","Damgan"),ordered=T)) %>%
+  mutate(number=as.numeric(site))
+  
+# On récupère les centroide de chaque site
+site_scores_cent <- site_scores %>%
+  group_by(theme,site) %>%
+  summarise(cent1 = mean(PC1), cent2 = mean(PC2)) %>%
+  ungroup %>%
+  left_join(site_scores,.)
+
+# On récupère les centroides pour les labels
+label <- site_scores_cent %>%
+  group_by(theme,site,number) %>%
+  summarise(cent1 = mean(PC1), cent2 = mean(PC2)) %>%
+  ungroup
+
+# Calculate the variance represented by each axis
+var_axes <- round(com_pol_pca$CA$eig/sum(com_pol_pca$CA$eig)*100,2)
+
+# Représentation
+#---------------
+
+# Sites
+p <- ggplot(site_scores, aes(x=PC1, y=PC2, col=theme, fill = theme, group=site))
+p <- p + geom_point(size=2,shape=21, alpha=0.7) + geom_segment(data = site_scores_cent, aes(x=cent1, y=cent2, xend=PC1, yend=PC2, color=theme))
+p <- p + geom_label_repel(data= label, aes(x=cent1, y=cent2, label = number, fill = theme), fontface="bold",size=3, col="white", segment.colour = "black", box.padding = 0, inherit.aes=FALSE, show.legend = FALSE, alpha=0.8)
+p <- p + coord_equal()
+p <- p + scale_colour_manual(values=c("#440154FF", "#31688EFF", "#35B779FF", "#f1a340"),name="")
+p <- p + scale_fill_manual(values=c("#440154FF", "#31688EFF", "#35B779FF", "#f1a340"),name="")
+p <- p + xlab(paste("PCA1:",var_axes[1],"%")) + ylab(paste("PCA2:",var_axes[2],"%"))
+p <- p + theme_bw() + theme(text=element_text(size=16), strip.text.x = element_text(face="bold"), legend.position = "bottom")
+p <- p + guides(colour = guide_legend(override.aes = list(shape = 15, size=5, alpha = 0.7)))
+
+p
+
+```
+
+---
+
+# Figure S4
+
+## Computation
+
+### Observed functional diversity for each trait individually
+
+```{r, eval = TRUE}
+
+# Initilisation
+#--------------
+
+mat_trait <- trait_prop_estim
+
+res <- NULL
+
+# Loop on each trait
+#-----------------
+
+for(t in unique(trait_list$Trait)){
+  
+  # Select all the modalities of the trait
+  mod <- trait_list$Accronyme[trait_list$Trait == t]
+  
+  tmp_trait <- mat_trait[,mod]
+  
+  # Compute Rao's Q entropy for this trait
+  fd_t <- rao.diversity(com_pol,tmp_trait)
+
+  # Format
+  res_t <- data.frame(Trait = t, Samples = rownames(com_pol), RaoQ = fd_t$FunRao)
+        
+  res <- bind_rows(res,res_t)
+}
+
+# Format the output
+#--------------
+
+obs_div <- res %>% 
+  # Recreate the samples id
+  mutate(mini_theme=sapply(str_split(.$Samples,"_"),'[[',1,simplify=T), site=sapply(str_split(.$Samples,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$Samples,"_"),'[[',3,simplify=T)) %>%
+  mutate_if(is.character,as.factor) %>%
+  rename(RaoQ_obs = RaoQ) %>%
+  select(-Samples)
+
+head(obs_div)
+```
+
+### Null model per traits
+
+```{r nperm, eval = TRUE}
+
+# Initialisation
+#---------------
+
+set.seed(1) 
+
+null_model<- "trialswap"
+nperm <- 1000
+
+mat_trait <- trait_prop_estim
+
+res <- NULL
+
+# Loop on the traits
+#--------------------
+
+for(t in unique(trait_list$Trait)){
+  
+  # Select all the modalities of the trait
+  mod <- trait_list$Accronyme[trait_list$Trait == t]
+  
+  tmp_trait <- mat_trait[,mod]
+  
+  # Loop for each permutation
+  for(i in seq(nperm)){
+  
+    # Permute species separately within the intertidal and within the subtidal
+    com_inter_i <- randomizeMatrix(com_pol_inter, null.model = null_model, iterations = 100000)
+    com_sub_i <- randomizeMatrix(com_pol_sub, null.model = null_model, iterations = 100000)
+    
+    # Compute Rao's Q
+    fd_inter_i <- rao.diversity(com_inter_i,tmp_trait)
+    fd_sub_i <- rao.diversity(com_sub_i,tmp_trait)
+    
+    # Save the resuts
+    res_inter_i <- data.frame(Permutation = i, Trait = t, Samples = rownames(com_inter_i), RaoQ = fd_inter_i$FunRao)
+    res_sub_i <- data.frame(Permutation = i, Trait = t, Samples = rownames(com_sub_i), RaoQ = fd_sub_i$FunRao)
+        
+    res <- bind_rows(res,res_inter_i,res_sub_i)
+  }
+}
+
+# Format the output
+#--------------
+
+null_div_swap <- res %>%
+  # Recreate the samples id
+  mutate(mini_theme=sapply(str_split(.$Samples,"_"),'[[',1,simplify=T), site=sapply(str_split(.$Samples,"_"),'[[',2,simplify=T), annee=sapply(str_split(.$Samples,"_"),'[[',3,simplify=T)) %>%
+  mutate_if(is.character,as.factor)
+
+# Compute the mean and sd across the randomized communities for each site and year (annee in French), and habitat (mini_theme here)  
+#---------------------------------------------------------------------------------
+
+null_div_ses_swap <- null_div_swap %>%
+  group_by(Trait,mini_theme,site,annee) %>%
+  summarise(n = n(), RaoQ_mu = mean(RaoQ), RaoQ_sd = sd(RaoQ))
+```
+
+### Compute SES values
+
+```{r}
+
+# Merge observed and null values to compute the SES
+ses_trait <- full_join(obs_div,null_div_ses_swap) %>%
+  # On joint les identifiants des échantillons 
+  right_join(id_pol,.) %>%
+  # On calcule les SES
+  mutate(SES_Rao = ((RaoQ_obs - RaoQ_mu)/RaoQ_sd)) %>%
+  # Format for representation
+  select(theme, mini_theme,site,annee,Trait,SES_Rao) %>%
+  gather(Metric,value ,-theme, -mini_theme,-site,-annee,-Trait)
+
+```
+
+## Figure of the article
+
+```{r, fig.width=30, fig.height=20}
+
+p <- ggplot(ses_trait,aes(x = mini_theme, y = value, fill = theme))
+p <- p + facet_wrap(~Trait, ncol=5, labeller = labeller(Trait = label_wrap_gen(width=10)))
+p <- p + geom_violin(trim=TRUE,alpha=0.5) + geom_boxplot(width=0.1, fill="black",col="black")
+p <- p + geom_hline(yintercept=0,col="black")
+p <- p + stat_summary(fun.y=median, geom="point", shape=23, col="white", fill="white", size=1.5)
+p <- p + stat_summary(fun.y=median, geom = "errorbar", aes(ymax = ..y.., ymin = ..y..), width = .1, col="white")
+p <- p + guides(fill=guide_legend(title="Habitat")) + ylab("SES") + xlab("")
+p <- p + scale_fill_manual(values=c("#440154FF","#31688EFF","#35B779FF","#f1a340"),name="Habitat") 
+p <- p + theme_light() + theme(strip.text.y=element_text(angle=0), strip.text = element_text(face="bold", colour="black"), text=element_text(size=24),axis.text.x=element_blank())
+p <- p + ylab(expression('SES'['RaoQ'])) + xlab("")
+
+plot(p) # save as image 1500 x 1000 | 1200 x 2000
+```
+
+---
+
+# Figure S5
+
+
+```{r, fig.width=12, fig.height=20}
+
+SES_alpha <- func_indic %>%
+  spread(metric, value) %>%
+  left_join(ses,.) %>%
+  spread(Metric,value) %>%
+  gather(metric,value, -theme, -mini_theme, -site, -annee, -method_echant, -SES_Rao) %>%
+  filter(metric %in% c("Richness","Abundance")) %>%
+  mutate(metric = factor(metric,levels=c("Richness","Abundance"), ordered=T))
+
+p <- ggplot(SES_alpha,aes(x=value,y=SES_Rao,fill=theme))
+p <- p + geom_hline(yintercept=0,col="black")
+p <- p + facet_wrap(theme ~ metric, scales="free_x", ncol=2)
+p <- p + scale_y_continuous(limits=c(-2.2,2.2))
+p <- p + geom_point(shape=21,size=3,alpha=0.6) + scale_fill_manual(values=rev(c("#440154FF","#31688EFF","#35B779FF","#f1a340")),name="Habitat") 
+p <- p + geom_smooth(aes(col=theme)) + scale_colour_manual(values=rev(c("#440154FF","#31688EFF","#35B779FF","#f1a340")),name="Habitat") 
+p <- p + guides(fill=guide_legend(title="Habitat"),col=guide_legend(title="Habitat"))
+p <- p + theme_light() + theme(text=element_text(size=24),strip.text=element_text(face="bold",colour="black"), legend.position="none")
+p <- p + ylab(expression('SES'['RaoQ']))
+
+plot(p)
+```
+
+```{r, eval = FALSE}
+
+ggsave("SES_richness_abundance.svg", plot=p, device=svg, height = 15)
+
+```
+
+---
+
+# Figure S6
+
+```{r}
+
+abund_reprod_freq <- com_trait_estim %>%
+  as.data.frame() %>%
+  rownames_to_column("Sample") %>%
+  bind_cols(id_pol,.) %>%
+  select(theme, Sample,Iteroparous,Semelparous) %>%
+  gather(Reproduction_frequency, Abundance, -theme, -Sample)
+
+p <- ggplot(data = abund_reprod_freq, mapping = aes(x = Reproduction_frequency, y = Abundance, fill = Reproduction_frequency, group=Sample))
+p <- p + facet_wrap(~theme,ncol=2, scales="free_y")
+p <- p + geom_line(mapping = aes(x = Reproduction_frequency, y = Abundance, group=Sample), inherit.aes = FALSE)
+p <- p + geom_point(shape=21,size=2,alpha=0.7)
+p <- p + scale_fill_manual(values=c("#2c7bb6","#d7191c"))
+p <- p + geom_vline(xintercept=1, linetype="dashed", size=.1)
+p <- p + geom_vline(xintercept=2, linetype="dashed", size=.1)
+p <- p + xlab("Reproduction frequency")
+p <- p + stat_summary(aes(x = Reproduction_frequency, y = Abundance, colour = Reproduction_frequency), inherit.aes=FALSE, fun.data = mean_sdl, fun.args = list(mult = 1), geom = "pointrange", position = ggplot2::position_nudge(x = c(-0.1, +0.1), y = 0),fatten = 0.3) 
+p <- p + scale_colour_manual(values=c("#2c7bb6","#d7191c"))
+p <- p + theme(legend.position = "none")
+p
+
+```
+
+```{r, eval = FALSE}
+ggsave(file="Reprod_freq.svg", plot=p, width=12, height=10, device = "svg")
+```
+
+---
+
+# Figure S2
+
+```{r, fig.height = 15, fig.width = 15, eval = TRUE}
+
+# We load it at the end as it messes with ggplot themes
+library(ggtern)
+
+# With encircle
+p <- ggtern(mapping = aes(Mud,Gravel,Sand, fill = theme), data = envir)
+p <- p + geom_encircle(alpha=0.4,size=1, expand=0)
+p <- p + geom_point(shape = 21, alpha = 0.8, size = 4)
+p <- p + facet_wrap(~theme,ncol = 2)
+#p <- p + scale_colour_manual(values = rev(c("#440154FF", "#31688EFF", "#35B779FF", "#f1a340")))
+p <- p + scale_fill_manual(values = rev(c("#440154FF", "#31688EFF", "#35B779FF", "#f1a340")), name="Habitat")
+p <- p +  theme_linedraw() + theme_showarrows()
+p <- p +  guides(fill = guide_legend(override.aes = list(size = 5, linetype = 0, shape = 21)), colour = FALSE)
+p <- p + theme(text=element_text(size = 18))
+
+p
+
+```
+
+---
+
+# Session info
+
+```{r, echo = TRUE}
+sessionInfo()
+```

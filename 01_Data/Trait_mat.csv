@@ -1,0 +1,237 @@
+Kingdom,Phylum,Class,Order,Family,Genus,Species,species,Size_inf2,Size_2-5,Size_5-10,Size_10-50,Size_50-100,Size_100-200,Size_sup200,SSDF,SDF,ASF,PSF,Grazer,Pred,Scav,Parasitic,Microphagous,Macrophagous,Infaunal,Epibenthic,Tube_dweller,Burrower,Crawler,Swimmer,Attached,Mob_0,Mob_inf10,Mob_10-100,Mob_100-1000,Bioturb_N,Bioturb_S,Bioturb_B,Bioturb_UC,Bioturb_DC,Bioturb_R,Hermaphrodite,Gonochoric,Dev_asex,Dev_direct,Dev_plankto ,Dev_lecitho,Iteroparous,Semelparous,Short_life_span,Medium_life_span,Long_life_span
+Animalia,Annelida,Polychaeta,Amphinomida,Amphinomidae,Pareurythoe,Pareurythoe borealis,Pareurythoe borealis,0,0,0,4,0,0,0,0,1,0,0,0,2,3,0,1,3,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,,,,,4,0,,,
+Animalia,Annelida,Polychaeta,Amphinomida,Euphrosinidae,Euphrosine,Euphrosine foliosa,Euphrosine foliosa,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,0,4,0,0,4,0,0,0,4,0,0,0,4,0,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Dorvilleidae,Dorvillea,Dorvillea rubrovittata,Dorvillea rubrovittata,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,1,3,1,0,0,3,1,0,0,0,4,0,0,0,0,4,0,2,0,2,,,,,
+Animalia,Annelida,Polychaeta,Eunicida,Dorvilleidae,Protodorvillea,Protodorvillea kefersteini,Protodorvillea kefersteini,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,1,3,1,0,0,3,1,0,0,0,4,0,0,0,0,4,0,4,0,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Dorvilleidae,Schistomeringos,Schistomeringos neglecta,Schistomeringos neglecta,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,1,3,1,0,0,3,1,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Dorvilleidae,Schistomeringos,Schistomeringos rudolphi,Schistomeringos rudolphi,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,1,3,1,0,0,3,1,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Eunice,Eunice pennata,Eunice pennata,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,2,2,4,0,0,0,0,1,3,3,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Eunice,Eunice vittata,Eunice vittata,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,2,2,0,1,3,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Leodice,Leodice harassii,Leodice harassii,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,2,2,0,1,3,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,0,4
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Leodice,Leodice torquata,Leodice torquata,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,2,2,0,1,3,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,4,0,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Lysidice,Lysidice ninetta,Lysidice ninetta,0,0,0,0,0,4,0,0,0,0,0,2,2,2,0,0,4,2,2,0,1,3,0,0,0,1,3,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Lysidice,Lysidice unicornis,Lysidice unicornis,0,0,0,0,0,4,0,1,1,0,0,0,3,3,0,1,3,3,1,0,3,1,0,0,0,1,3,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Marphysa,Marphysa bellii,Marphysa bellii,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,3,1,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Eunicidae,Marphysa,Marphysa sanguinea,Marphysa sanguinea,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,3,1,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Lumbrineridae,Hilbigneris,Hilbigneris gracilis,Hilbigneris gracilis,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,4,0,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Eunicida,Lumbrineridae,Lumbrineriopsis,Lumbrineriopsis paradoxa,Lumbrineriopsis paradoxa,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,4,0,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Lumbrineridae,Lumbrineris,NA,Lumbrineris spp.,0,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,3,1,0,4,0,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Eunicida,Lumbrineridae,Scoletoma,NA,Scoletoma spp.,0,0,0,0,1,2,3,0,0,0,0,0,2,2,0,0,4,3,1,0,4,0,0,0,0,0,3,1,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Eunicida,Oenonidae,Arabella,Arabella iricolor,Arabella iricolor,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,0,3,1,0,0,4,0,0,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Eunicida,Oenonidae,Drilonereis,Drilonereis filum,Drilonereis filum,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,2,3,0,2,3,0,0,0,3,1,0,0,0,4,0,0,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Eunicida,Onuphidae,Aponuphis,Aponuphis bilineata,Aponuphis bilineata,0,0,0,0,4,0,0,0,0,0,0,1,2,3,0,1,3,2,2,2,0,3,0,0,0,0,3,1,0,4,0,0,0,0,0,4,0,4,0,0,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Onuphidae,Diopatra,NA,Diopatra spp.,0,0,0,0,2,0,2,0,1,0,0,3,0,1,0,2,2,3,1,3,0,1,0,0,0,3,1,0,0,4,0,0,0,0,0,4,0,0,0,4,4,0,0,2,2
+Animalia,Annelida,Polychaeta,Eunicida,Onuphidae,Nothria,Nothria conchylega,Nothria conchylega,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,4,0,2,2,2,0,2,0,0,3,2,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Eunicida,Onuphidae,Onuphis,Onuphis eremita,Onuphis eremita,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,3,1,4,0,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Arenicolidae,Arenicola,Arenicola marina,Arenicola marina,0,0,0,0,0,4,0,2,2,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,0,0,4,0,4,0,0,4,0,0,3,2
+Animalia,Annelida,Polychaeta,NA,Capitellidae,Capitella,Capitella capitata,Capitella capitata,0,0,0,0,4,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,1,3,0,0,0,0,0,2,2,0,4,0,0,2,2,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Capitellidae,Capitella,Capitella giardi,Capitella giardi,0,0,4,0,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,1,3,0,0,0,0,0,2,2,0,0,4,0,4,0,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Capitellidae,Capitella,Capitella minima,Capitella minima,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,1,3,0,0,0,0,0,2,2,0,4,0,0,2,0,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Capitellidae,Dasybranchus,Dasybranchus caducus,Dasybranchus caducus,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,1,3,0,0,0,0,0,2,2,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Capitellidae,Heteromastus,Heteromastus filiformis,Heteromastus filiformis,0,0,0,0,2,2,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,1,3,0,0,0,0,0,4,0,0,0,4,0,0,4,0,0,4,4,0,0
+Animalia,Annelida,Polychaeta,NA,Capitellidae,Notomastus,Notomastus latericeus,Notomastus latericeus,0,0,0,0,0,2,2,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,1,3,0,0,0,0,0,4,0,0,0,4,0,0,0,4,,,4,0,0
+Animalia,Annelida,Polychaeta,NA,Chaetopteridae,Chaetopterus,Chaetopterus variopedatus,Chaetopterus variopedatus,0,0,0,0,0,0,4,0,0,4,0,0,0,0,0,4,0,4,0,4,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Chaetopteridae,Spiochaetopterus,NA,Spiochaetopterus spp.,0,0,0,3,1,0,0,0,2,2,2,0,0,0,0,4,0,4,0,4,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,2,0,2,0,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Euclymene,NA,Euclymene spp.,0,0,0,0,2,3,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,1,3,0,0,0,4,4,0,0,4,0
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Leiochone,Leiochone leiopygos,Leiochone leiopygos,0,0,0,0,0,4,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Macroclymene,Macroclymene santanderensis,Macroclymene santanderensis,0,0,0,0,0,4,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Maldane,Maldane glebifex,Maldane glebifex,0,0,0,0,4,0,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Microclymene,Microclymene tricirrata,Microclymene tricirrata,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,NA,NA,Maldanidae spp.,0,2,2,2,2,2,2,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,4,0,0,1,3,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Nicomache,Nicomache lumbricalis,Nicomache lumbricalis,0,0,0,0,0,4,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,2,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Maldanidae,Petaloproctus,Petaloproctus terricolus,Petaloproctus terricolus,0,0,0,0,0,4,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Opheliidae,Armandia,Armandia cirrhosa,Armandia cirrhosa,0,1,3,0,0,0,0,3,1,0,0,0,0,0,0,4,0,3,2,0,3,0,1,0,0,3,1,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Opheliidae,Ophelia,Ophelia bicornis,Ophelia bicornis,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,0,0,4,4,0,0,2,2
+Animalia,Annelida,Polychaeta,NA,Opheliidae,Ophelia,Ophelia roscoffensis,Ophelia roscoffensis,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,0,0,4,4,0,0,2,2
+Animalia,Annelida,Polychaeta,NA,Opheliidae,Ophelina,NA,Ophelina spp.,0,2,3,2,0,0,0,3,1,0,0,0,0,0,0,4,0,3,1,0,3,0,1,0,0,0,2,2,0,0,4,0,0,0,0,4,0,0,2,2,,,,,
+Animalia,Annelida,Polychaeta,NA,Orbiniidae,Orbinia,Orbinia latreillii,Orbinia latreillii,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,NA,Orbiniidae,Orbinia,Orbinia sertulata,Orbinia sertulata,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,NA,Orbiniidae,Orbinia,NA,Orbinia sp.,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,NA,Orbiniidae,Scoloplos,Scoloplos (Scoloplos) armiger,Scoloplos (Scoloplos) armiger,0,0,0,0,0,4,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,NA,Paraonidae,Aricidea,Aricidea (Aricidea) fragilis,Aricidea (Aricidea) fragilis,0,0,0,0,4,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,4,0,0,0,0,0,4,0,2,0,2,0,4,,,
+Animalia,Annelida,Polychaeta,NA,Paraonidae,Aricidea,Aricidea (Aricidea) minuta,Aricidea (Aricidea) minuta,0,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,4,0,0,0,0,0,4,0,2,0,2,0,4,,,
+Animalia,Annelida,Polychaeta,NA,Paraonidae,NA,NA,Paraonidae spp.,0,0,3,3,1,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,3,1,0,0,4,0,0,0,0,0,4,0,2,0,2,0,4,,,
+Animalia,Annelida,Polychaeta,NA,Paraonidae,Paradoneis,Paradoneis armata,Paradoneis armata,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,3,1,0,0,4,0,0,0,0,0,4,0,2,0,2,0,4,,,
+Animalia,Annelida,Polychaeta,NA,Paraonidae,Paradoneis,Paradoneis lyra,Paradoneis lyra,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,3,1,0,0,4,0,0,0,0,0,4,0,2,0,2,0,4,,,
+Animalia,Annelida,Polychaeta,NA,Paraonidae,Paradoneis,NA,Paradoneis sp.,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,3,1,0,0,4,0,0,0,0,0,4,0,2,0,2,0,4,,,
+Animalia,Annelida,Polychaeta,NA,Polygordiidae,Polygordius,Polygordius lacteus,Polygordius lacteus,0,0,0,0,4,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,4,0,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,NA,Scalibregmatidae,Asclerocheilus,Asclerocheilus intermedius,Asclerocheilus intermedius,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,NA,Scalibregmatidae,Scalibregma,Scalibregma celticum,Scalibregma celticum,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,4,0,4,0,0
+Animalia,Annelida,Polychaeta,NA,Scalibregmatidae,Sclerocheilus,Sclerocheilus minutus,Sclerocheilus minutus,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,NA,Travisiidae,Travisia,Travisia forbesii,Travisia forbesii,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,4,0,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Aphroditidae,Aphrodita,Aphrodita aculeata,Aphrodita aculeata,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,2,2,0,0,4,0,0,0,0,1,3,0,0,4,0,0,0,0,4,0,2,0,2,4,0,0,0,4
+Animalia,Annelida,Polychaeta,Phyllodocida,Aphroditidae,Laetmonice,Laetmonice hystrix,Laetmonice hystrix,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,2,2,0,0,4,0,0,0,0,1,3,0,0,4,0,0,0,0,4,0,0,0,4,4,0,0,0,4
+Animalia,Annelida,Polychaeta,Phyllodocida,Glyceridae,Glycera,Glycera lapidum,Glycera lapidum,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,2,1,0,0,0,1,3,0,0,4,0,0,0,0,4,0,0,4,0,0,4,0,4,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Glyceridae,Glycera,Glycera tridactyla,Glycera tridactyla,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,2,1,0,0,0,1,3,0,0,4,0,0,0,0,4,0,0,4,0,0,4,0,4,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Glyceridae,Glycera,NA,Glycera spp.,0,0,0,0,3,2,1,0,0,0,0,0,2,2,0,0,4,3,1,0,3,2,1,0,0,0,1,3,0,0,4,0,0,0,0,4,0,0,4,0,0,4,0,4,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Goniadidae,Glycinde,Glycinde nordmanni,Glycinde nordmanni,0,0,0,0,4,0,0,0,0,0,0,0,3,2,0,0,4,4,0,0,4,0,0,0,0,1,3,0,0,0,4,0,0,0,,,0,0,0,4,,,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Goniadidae,Goniada,NA,Goniada spp.,0,0,0,0,2,2,2,0,0,0,0,0,3,2,0,0,4,4,0,0,4,0,0,0,0,1,3,0,0,0,4,0,0,0,,,0,0,4,0,,,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Goniadidae,Goniadella,NA,Goniadella spp.,0,0,0,4,0,0,0,0,0,0,0,0,3,2,0,0,4,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,,,,,,,,,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Gyptis,Gyptis propinqua,Gyptis propinqua,0,0,4,0,0,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Hesione,Hesione splendida,Hesione splendida,0,0,0,0,4,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,0,0,4,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Hesiospina,Hesiospina aurantiaca,Hesiospina aurantiaca,0,0,0,4,0,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Nereimyra,Nereimyra punctata,Nereimyra punctata,0,0,0,4,0,0,0,0,0,0,0,0,3,2,0,4,0,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Oxydromus,Oxydromus flexuosus,Oxydromus flexuosus,0,0,0,0,4,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Oxydromus,Oxydromus pallidus,Oxydromus pallidus,0,0,4,0,0,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Psamathe,Psamathe fusca,Psamathe fusca,0,0,0,0,4,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Hesionidae,Syllidia,Syllidia armata,Syllidia armata,0,0,4,0,0,0,0,0,0,0,0,0,3,2,0,2,2,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Lacydoniidae,Lacydonia,Lacydonia miranda,Lacydonia miranda,0,4,0,0,0,0,0,2,0,0,0,0,2,0,0,4,0,3,1,0,2,2,0,0,0,3,1,0,0,4,0,0,0,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Nephtyidae,Nephtys,Nephtys cirrosa,Nephtys cirrosa,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,4,0,0,3,0,1,0,0,0,0,4,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,3,1
+Animalia,Annelida,Polychaeta,Phyllodocida,Nephtyidae,Nephtys,Nephtys hombergii,Nephtys cf. hombergii,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,4,0,0,3,0,1,0,0,0,0,4,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,3,1
+Animalia,Annelida,Polychaeta,Phyllodocida,Nephtyidae,Nephtys,NA,Nephtys spp.,0,0,0,2,2,2,0,0,0,0,0,0,2,2,0,0,4,4,0,0,3,0,1,0,0,0,0,4,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,3,1
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Alitta,Alitta succinea,Alitta succinea,0,0,0,0,0,4,0,0,2,0,0,2,2,2,0,2,2,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,0,4,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Micronereis,Micronereis variegata,Micronereis variegata,2,2,0,0,0,0,0,0,2,0,0,2,2,2,0,2,2,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,4,0,0,0,4,0,4,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Neanthes,Neanthes acuminata,Neanthes acuminata,0,0,0,0,4,0,0,0,2,0,0,2,2,2,0,2,2,3,1,3,0,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,4,0,0,0,4,3,1,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Neanthes,Neanthes nubila,Neanthes nubila,0,0,0,0,0,0,4,0,2,0,0,2,2,2,0,2,2,3,1,3,0,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,4,0,0,0,4,3,1,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Nereis,NA,Nereis spp.,0,0,0,2,2,3,0,0,2,0,0,2,2,2,0,2,2,2,2,0,3,3,1,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,0,4,0,4,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Perinereis,Perinereis cultrifera,Perinereis cultrifera,0,0,0,0,0,2,2,0,0,0,0,3,1,1,0,2,2,3,1,0,3,1,0,0,1,3,0,0,0,0,4,0,0,0,0,4,0,2,0,2,0,4,0,4,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Platynereis,Platynereis dumerilii,Platynereis dumerilii,0,0,0,3,2,0,0,0,0,0,0,4,0,0,0,2,2,0,4,3,0,1,0,0,1,3,0,0,0,0,4,0,0,0,0,4,0,0,0,4,0,4,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Nereididae,Websterinereis,Websterinereis glauca,Websterinereis glauca,0,0,0,4,0,0,0,0,2,0,0,3,0,0,0,2,2,0,4,3,0,1,0,0,1,3,0,0,0,0,4,0,0,0,0,4,0,4,0,0,0,4,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Pholoidae,Pholoe,Pholoe inornata,Pholoe inornata,0,0,3,1,0,0,0,0,0,0,0,0,2,2,0,2,2,2,2,0,2,2,0,0,0,3,1,0,0,4,0,0,0,0,0,4,0,0,4,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eteone,Eteone longa,Eteone longa,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,4,3,1,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,2,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eteone,Eteone suecica,Eteone suecica,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,2,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eteone,NA,Eteone sp.,0,0,0,2,2,2,0,0,0,0,0,0,2,2,0,0,4,3,1,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,2,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eulalia,Eulalia aurea,Eulalia aurea,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,2,2
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eulalia,Eulalia clavigera,Eulalia clavigera,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,2,2
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eulalia,Eulalia mustela,Eulalia mustela,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,2,2
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eumida,Eumida parva,Eumida parva,0,0,4,0,0,0,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,2,2
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eulalia,NA,Eulalia spp.,0,0,1,2,3,1,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,0,2,2
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Eumida,NA,Eumida spp.,0,0,0,2,2,2,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Hypereteone,Hypereteone foliosa,Hypereteone foliosa,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Mysta,Mysta picta,Mysta picta,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,NA,NA,Phyllodocidae spp.,0,0,2,2,3,3,2,0,0,0,0,0,2,2,0,0,4,2,2,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,3,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Nereiphylla,Nereiphylla rubiginosa,Nereiphylla rubiginosa,0,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,,,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Notophyllum,Notophyllum foliosum,Notophyllum foliosum,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,1,3,0,1,3,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,,,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Paranaitis,Paranaitis kosteriensis,Paranaitis kosteriensis,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,2,2,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce citrina,Phyllodoce citrina,0,0,0,0,3,2,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce laminosa,Phyllodoce laminosa,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce lineata,Phyllodoce lineata,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce longipes,Phyllodoce longipes,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce maculata,Phyllodoce maculata,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce mucosa,Phyllodoce mucosa,0,0,0,0,3,2,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,Phyllodoce rosea,Phyllodoce rosea,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Phyllodoce,NA,Phyllodoce spp.,0,0,0,2,3,2,3,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Pseudomystides,Pseudomystides limbata,Pseudomystides limbata,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,2,2,0,2,2,0,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,2,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Pterocirrus,Pterocirrus macroceros,Pterocirrus macroceros,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,2,2,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Phyllodocidae,Sige,Sige fusigera,Sige fusigera,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,2,2,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,2,2,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Pilargidae,Pilargis,Pilargis verrucosa,Pilargis verrucosa,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,4,0,0,4,0,0,0,0,3,1,0,0,0,4,0,0,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Alentia,Alentia gelatinosa,Alentia gelatinosa,0,0,0,0,4,0,0,0,0,0,0,0,3,1,0,1,3,0,4,0,0,4,0,0,0,0,0,4,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe antilopes,Harmothoe antilopes,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe areolata,Harmothoe areolata,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe extenuata,Harmothoe extenuata,0,0,0,0,4,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe imbricata,Harmothoe spp.,0,0,0,3,1,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe imbricata,Harmothoe imbricata,0,0,0,3,1,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe impar,Harmothoe impar,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe spinifera,Harmothoe spinifera,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Harmothoe,Harmothoe viridis,Harmothoe viridis,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,3,2,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Lepidonotus,NA,Lepidonotus spp.,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,0,4,0,0,4,0,0,0,3,2,0,4,0,0,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,Malmgrenia andreapolis,Malmgrenia andreapolis,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,Malmgrenia arenicolae,Malmgrenia arenicolae,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,Malmgrenia castanea,Malmgrenia castanea,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,Malmgrenia ljungmani,Malmgrenia ljungmani,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,Malmgrenia marphysae,Malmgrenia marphysae,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,Malmgrenia mcintoshi,Malmgrenia mcintoshi,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Malmgrenia,NA,Malmgrenia spp.,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,1,3,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Pettibonesia,Pettibonesia furcosetosa,Pettibonesia furcosetosa,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,2,2,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Polynoe,Polynoe scolopendrina,Polynoe scolopendrina,0,0,0,0,0,4,0,0,0,0,0,0,3,1,0,1,3,2,2,0,0,4,0,0,0,0,2,2,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Polynoidae,Subadyte,Subadyte pellucida,Subadyte pellucida,0,0,0,4,0,0,0,0,0,0,0,0,3,1,0,1,3,0,4,0,0,4,0,0,0,3,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Claparedepelogenia,Claparedepelogenia inclusa,Claparedepelogenia inclusa,0,0,0,0,0,0,4,0,0,0,0,0,2,2,0,0,4,3,1,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Labioleanira,Labioleanira yhleni,Labioleanira yhleni,0,0,0,0,4,0,0,0,0,0,0,0,2,2,0,0,4,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Neoleanira,Neoleanira tetragona,Neoleanira tetragona,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Pelogenia,Pelogenia arenosa,Pelogenia arenosa,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,4,0,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Pisione,Pisione remota,Pisione remota,0,0,0,4,0,0,0,0,0,0,0,0,2,2,0,0,4,4,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Sigalion,Sigalion mathildae,Sigalion mathildae,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,3,1,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,4,,,,,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Sigalionidae,Sthenelais,Sthenelais boa,Sthenelais boa,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,0,4,2,2,0,3,1,0,0,0,2,2,0,0,0,4,0,0,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Sphaerodoridae,NA,NA,Sphaerodoridae spp.,2,3,3,2,0,0,0,0,2,0,0,0,2,2,2,2,2,2,2,0,2,2,0,2,0,4,0,0,0,0,4,0,0,0,2,2,0,2,0,2,,,,,
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Dioplosyllis,Dioplosyllis cirrosa,Dioplosyllis cirrosa,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Eurysyllis,Eurysyllis tuberculata,Eurysyllis tuberculata,0,4,0,0,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Eusyllis,NA,Eusyllis spp.,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Exogone,NA,Exogone spp.,0,2,2,0,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,1,3,0,4,0,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Haplosyllis,Haplosyllis spongicola,Haplosyllis spongicola,0,2,2,0,0,0,0,0,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,4,2,2,0,0,4,0,0,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Myrianida,NA,Myrianida spp.,0,0,1,3,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,1,3,0,0,0,4,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,NA,NA,Syllidae spp.,0,0,2,2,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,2,2,0,0,0,1,3,1,3,0,3,3,1,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Odontosyllis,Odontosyllis ctenostoma,Odontosyllis ctenostoma,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Odontosyllis,Odontosyllis fulgurans,Odontosyllis fulgurans,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Odontosyllis,Odontosyllis gibba,Odontosyllis gibba,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Odontosyllis,NA,Odontosyllis sp.,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Parexogone,Parexogone hebes,Parexogone hebes,0,0,4,0,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,0,4,0,0,0,0,4,0,4,0,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Sphaerosyllis,Sphaerosyllis bulbosa,Sphaerosyllis bulbosa,0,2,2,0,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Sphaerosyllis,NA,Sphaerosyllis spp.,0,4,0,0,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,Syllis garciai,Syllis garciai,0,0,4,0,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,4,0,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,Syllis gracilis,Syllis gracilis,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,4,0,0,0,0,0,4,2,0,0,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,Syllis hyalina,Syllis hyalina,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,4,0,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,Syllis krohni,Syllis krohni,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,4,0,0,0,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,Syllis variegata,Syllis variegata,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,4,0,0,0,0,1,3,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,Syllis vittata,Syllis vittata,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,4,0,0,0,0,1,3,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Syllis,NA,Syllis spp.,0,0,2,2,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,3,1,0,0,3,1,0,0,0,1,3,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Trypanosyllis,Trypanosyllis (Trypanosyllis) coeliaca,Trypanosyllis (Trypanosyllis) coeliaca,0,0,3,1,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,4,0,0,0,0,1,3,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Phyllodocida,Syllidae,Trypanosyllis,Trypanosyllis zebra,Trypanosyllis zebra,0,0,0,4,0,0,0,0,2,0,0,2,3,3,0,2,2,1,3,0,2,3,1,0,0,4,0,0,0,4,0,0,0,0,1,3,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Sabellida,Oweniidae,Owenia,Owenia fusiformis,Owenia fusiformis,0,0,0,0,4,0,0,0,3,2,0,0,0,0,0,3,2,3,1,4,0,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,0,4,0,4,0,1,3,0
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Branchiomma,Branchiomma bombyx,Branchiomma bombyx,0,0,0,4,0,0,0,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,4,0,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Chone,NA,Chone spp.,0,0,1,3,2,1,0,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,0,0,4,2,2,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Euchone,Euchone rosea,Euchone rosea,0,4,0,0,0,0,0,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Euchone,Euchone rubrocincta,Euchone rubrocincta,0,0,0,4,0,0,0,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Euchone,NA,Euchone sp.,0,2,2,2,0,0,0,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Jasmineira,Jasmineira elegans,Jasmineira elegans,0,0,0,4,0,0,0,0,0,1,3,0,0,0,0,4,0,3,1,3,0,0,1,0,3,1,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Acromegalomma,NA,Acromegalomma spp.,0,0,0,0,0,4,0,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,NA,NA,Sabellidae spp.,0,1,1,3,2,3,1,0,0,1,3,0,0,0,0,4,0,3,1,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,1,3,1,3,0,3,3,1,,,
+Animalia,Annelida,Polychaeta,Sabellida,Sabellidae,Sabella,Sabella pavonina,Sabella pavonina,0,0,0,0,0,0,4,0,0,1,3,0,0,0,0,4,0,1,3,4,0,0,0,0,4,0,0,0,0,4,0,0,0,0,0,4,0,0,0,4,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Sabellida,Serpulidae,Hydroides,Hydroides norvegica,Hydroides norvegica,0,0,0,4,0,0,0,0,0,2,2,0,0,0,0,4,0,0,4,4,0,0,0,0,4,0,0,0,4,0,0,0,0,0,1,3,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Sabellida,Serpulidae,Serpula,Serpula vermicularis,Serpula vermicularis,0,0,0,0,4,0,0,0,0,2,2,0,0,0,0,4,0,0,4,4,0,0,0,0,4,0,0,0,4,0,0,0,0,0,0,4,0,0,4,0,4,0,2,2,0
+Animalia,Annelida,Polychaeta,Sabellida,Serpulidae,Spirobranchus,NA,Spirobranchus spp.,0,0,0,4,0,0,0,0,0,2,2,0,0,0,0,4,0,0,4,4,0,0,0,0,4,0,0,0,4,0,0,0,0,0,1,3,0,0,4,0,4,0,2,2,0
+Animalia,Annelida,Polychaeta,Spionida,Magelonidae,Magelona,Magelona alleni,Magelona alleni,0,0,0,4,0,0,0,2,3,0,1,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,4,0,0,0,0,0,4,0,0,4,0,0,4,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Magelonidae,Magelona,Magelona filiformis,Magelona filiformis,0,0,0,0,4,0,0,2,3,0,1,0,0,0,0,4,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,0,4,0,0,4,0,0,4,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Magelonidae,Magelona,NA,Magelona sp.,0,0,0,2,2,2,0,2,3,0,1,0,0,0,0,4,0,4,0,2,2,0,0,0,2,2,0,0,0,4,0,0,0,0,0,4,0,0,4,0,0,4,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Poecilochaetidae,Poecilochaetus,Poecilochaetus serpens,Poecilochaetus serpens,0,0,0,3,1,0,0,0,2,0,2,0,0,0,0,4,0,4,0,0,4,0,0,0,0,2,2,0,0,4,0,0,0,0,0,4,0,0,4,0,,,,,
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Aonides,Aonides oxycephala,Aonides oxycephala,0,0,0,0,4,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Aonides,Aonides paucibranchiata,Aonides paucibranchiata,0,0,0,4,0,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Laonice,Laonice bahusiensis,Laonice bahusiensis,0,0,0,0,4,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Malacoceros,Malacoceros fuliginosus,Malacoceros fuliginosus,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,4,0,4,0,1,3,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Malacoceros,Malacoceros girardi,Malacoceros girardi,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,4,0,4,0,1,3,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Malacoceros,NA,Malacoceros spp.,0,0,0,3,2,3,0,0,4,0,0,0,0,0,0,4,0,4,0,1,3,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Microspio,NA,Microspio spp.,0,0,0,4,0,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,,,
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Polydora,NA,Polydora spp.,0,0,0,3,2,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,1,3,0,1,3,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Prionospio,NA,Prionospio spp.,0,0,0,4,0,0,0,0,3,1,3,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,0,4,0,3,1,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Pygospio,Pygospio elegans,Pygospio elegans,0,0,3,2,0,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,2,2,2,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Scolelepis,NA,Scolelepis spp.,0,0,0,2,3,3,0,0,2,0,2,0,0,0,0,4,0,4,0,2,2,0,0,0,1,3,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Spio,NA,Spio spp.,0,0,0,4,0,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,1,3,0,3,1,4,0,0
+Animalia,Annelida,Polychaeta,Spionida,Spionidae,Spiophanes,Spiophanes bombyx,Spiophanes bombyx,0,0,0,0,4,0,0,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Ampharetidae,Ampharete,NA,Ampharete spp.,0,0,1,3,0,0,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,4,0,0,2,2,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Ampharetidae,Amphicteis,Amphicteis gunneri,Amphicteis gunneri,0,0,0,4,0,0,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,2,2,0,0,4,0,4,0,0,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Ampharetidae,Melinna,Melinna palmata,Melinna palmata,0,0,0,4,0,0,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,2,2,0,0,4,0,0,0,4,4,0,1,3,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Aphelochaeta,Aphelochaeta marioni,Aphelochaeta cf. marioni,0,0,0,0,4,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Aphelochaeta,NA,Aphelochaeta spp.,0,0,0,0,4,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Caulleriella,Caulleriella alata,Caulleriella alata,0,0,3,1,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Caulleriella,Caulleriella bioculata,Caulleriella bioculata,0,0,0,4,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Caulleriella,NA,Caulleriella spp.,0,0,2,2,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Chaetozone,Chaetozone gibber,Chaetozone gibber,0,0,0,4,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Chaetozone,Chaetozone zetlandica,Chaetozone zetlandica,0,0,0,4,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Chaetozone,NA,Chaetozone spp.,0,0,1,3,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,2,2,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Cirratulus,Cirratulus cirratus,Cirratulus cirratus,0,0,0,0,4,0,0,2,3,0,0,0,0,0,0,4,0,2,2,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,2,0,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Cirriformia,Cirriformia tentaculata,Cirriformia tentaculata,0,0,0,0,0,4,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Kirkegaardia,NA,Kirkegaardia spp.,0,0,0,2,2,0,0,0,4,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,NA,NA,Cirratulidae spp.,0,0,1,3,2,2,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,1,3,2,3,0,3,3,1,2,2,0
+Animalia,Annelida,Polychaeta,Terebellida,Cirratulidae,Protocirrineris,Protocirrineris chrysoderma,Protocirrineris chrysoderma,0,0,0,4,0,0,0,2,3,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,4,0,0,0,0,0,4,2,2,0,2,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Flabelligeridae,Diplocirrus,Diplocirrus glaucus,Diplocirrus glaucus,0,0,0,4,0,0,0,0,4,0,0,0,0,0,0,4,0,2,2,0,2,2,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,2,0,2,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Flabelligeridae,Flabelligera,Flabelligera affinis,Flabelligera affinis,0,0,0,0,4,0,0,0,4,0,0,0,0,0,0,4,0,3,1,0,2,2,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Flabelligeridae,Pherusa,Pherusa monilifera,Pherusa monilifera,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,4,0,3,1,0,4,0,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Flabelligeridae,Pherusa,Pherusa plumosa,Pherusa plumosa,0,0,0,0,4,0,0,0,4,0,0,0,0,0,0,4,0,3,1,0,4,0,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Flabelligeridae,Piromis,Piromis eruca,Piromis eruca,0,0,0,0,4,0,0,0,4,0,0,0,0,0,0,4,0,3,1,0,2,2,0,0,3,1,0,0,0,0,0,4,0,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Pectinariidae,Amphictene,Amphictene auricoma,Amphictene auricoma,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,0,4,0,0,0,0,0,4,0,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Pectinariidae,Lagis,Lagis koreni,Lagis koreni,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,0,4,0,0,0,0,0,4,0,0,1,3,0,0,4,0,0,4,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Pectinariidae,Petta,Petta pusilla,Petta pusilla,0,0,3,1,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,0,4,0,0,0,0,0,4,0,0,0,4,0,0,4,0,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Sternaspidae,Sternaspis,Sternaspis scutata,Sternaspis scutata,0,0,0,4,0,0,0,4,0,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,0,4,0,0,0,0,4,0,0,0,4,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Amphitrite,NA,Amphitrite spp.,0,0,0,0,2,2,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Amphitritides,Amphitritides gracilis,Amphitritides gracilis,0,0,0,0,0,4,0,3,2,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Eupolymnia,Eupolymnia nebulosa,Eupolymnia nebulosa,0,0,0,0,0,4,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,2,2,0,0,0,0,0,0,4,0,0,4,0,0,0,4,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Lanice,Lanice conchilega,Lanice conchilega,0,0,0,0,0,0,4,0,2,0,2,0,0,0,0,4,0,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,4,0,0,4,0,0,4,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Neoamphitrite,Neoamphitrite affinis,Neoamphitrite affinis,0,0,0,0,3,1,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Neoamphitrite,Neoamphitrite figulus,Neoamphitrite figulus,0,0,0,0,0,3,2,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,0,0,4,4,0,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Nicolea,Nicolea venustula,Nicolea venustula,0,0,0,0,4,0,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,4,0,0,0,4,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Parathelepus,Parathelepus collaris,Parathelepus collaris,0,0,0,4,0,0,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,0,0,4,,,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Pista,NA,Pista spp.,0,0,0,0,3,2,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Polycirrus,NA,Polycirrus spp.,0,0,0,2,3,0,0,3,2,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,0,0,4,,,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Streblosoma,Streblosoma bairdi,Streblosoma bairdi,0,0,0,0,4,0,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,,,,,,,,,
+Animalia,Annelida,Polychaeta,Terebellida,Terebellidae,Thelepus,NA,Thelepus spp.,0,0,0,0,0,4,0,0,4,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,0,0,4,4,0,4,0,0
+Animalia,Annelida,Polychaeta,Terebellida,Trichobranchidae,Terebellides,NA,Terebellides spp.,0,0,0,0,4,0,0,3,2,0,0,0,0,0,0,4,0,4,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,4,0,0,4,0,0,4,0
+Animalia,Annelida,Polychaeta,Terebellida,Trichobranchidae,Trichobranchus,Trichobranchus glacialis,Trichobranchus glacialis,0,0,0,4,0,0,0,3,1,0,0,0,0,0,0,4,0,4,0,4,0,0,0,0,3,1,0,0,0,0,0,0,4,0,0,4,0,4,0,0,4,0,,,
